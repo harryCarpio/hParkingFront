@@ -1,0 +1,30 @@
+@import "tailwindcss";
+body {
+    background-color: rgb(241 245 249); /* slate-100 */
+}
+
+.sidebar-item-divider {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 4px;
+
+}
+.bg-celestevr {
+    background-color: rgb(32, 114, 185);
+}
+.bg-celestevr:hover {
+    background-color: rgb(42, 130, 205); 
+}
+.text-celestevr{
+    color: rgb(32, 114, 185);
+}
+
+.text-celestevr:hover{
+    color: rgb(42, 130, 205);
+}
+.accent-celestevr {
+    accent-color: rgb(32, 114, 185);
+}
+
+.accent-celestevr:hover {
+    accent-color: rgb(42, 130, 205);
+}

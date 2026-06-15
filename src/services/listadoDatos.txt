@@ -1,0 +1,443 @@
+{
+    "DayOfWeek": [
+        {
+            "order": 0,
+            "key": "MONDAY",
+            "label": "Lunes"
+        },
+        {
+            "order": 1,
+            "key": "TUESDAY",
+            "label": "Martes"
+        },
+        {
+            "order": 2,
+            "key": "WEDNESDAY",
+            "label": "Miércoles"
+        },
+        {
+            "order": 3,
+            "key": "THURSDAY",
+            "label": "Jueves"
+        },
+        {
+            "order": 4,
+            "key": "FRIDAY",
+            "label": "Viernes"
+        },
+        {
+            "order": 5,
+            "key": "SATURDAY",
+            "label": "Sábado"
+        },
+        {
+            "order": 6,
+            "key": "SUNDAY",
+            "label": "Domingo"
+        }
+    ],
+    "AvailabilityGranularity": [
+        {
+            "order": 0,
+            "key": "PARKING",
+            "label": "Parqueadero"
+        },
+        {
+            "order": 1,
+            "key": "LEVEL",
+            "label": "Nivel"
+        },
+        {
+            "order": 2,
+            "key": "SLOT",
+            "label": "Espacio"
+        }
+    ],
+    "RateGranularity": [
+        {
+            "order": 0,
+            "key": "PARKING",
+            "label": "Parqueadero"
+        },
+        {
+            "order": 1,
+            "key": "LEVEL",
+            "label": "Nivel"
+        },
+        {
+            "order": 2,
+            "key": "SLOT",
+            "label": "Espacio"
+        }
+    ],
+    "VehicleType": [
+        {
+            "order": 0,
+            "key": "CAR",
+            "label": "Automóvil"
+        },
+        {
+            "order": 1,
+            "key": "MOTORCYCLE",
+            "label": "Motocicleta"
+        },
+        {
+            "order": 2,
+            "key": "TRUCK",
+            "label": "Camión"
+        },
+        {
+            "order": 3,
+            "key": "MIXED",
+            "label": "Mixto"
+        }
+    ],
+    "CardBrand": [
+        {
+            "order": 0,
+            "key": "VISA",
+            "label": "Visa"
+        },
+        {
+            "order": 1,
+            "key": "MASTERCARD",
+            "label": "Mastercard"
+        },
+        {
+            "order": 2,
+            "key": "AMEX",
+            "label": "American Express"
+        },
+        {
+            "order": 3,
+            "key": "DISCOVER",
+            "label": "Discover"
+        },
+        {
+            "order": 4,
+            "key": "DINERS",
+            "label": "Diners Club"
+        },
+        {
+            "order": 5,
+            "key": "OTHER",
+            "label": "Otra"
+        }
+    ],
+    "ParkingType": [
+        {
+            "order": 0,
+            "key": "SIMPLE",
+            "label": "Simple"
+        },
+        {
+            "order": 1,
+            "key": "STRUCTURED",
+            "label": "Estructurado"
+        }
+    ],
+    "TaxIdType": [
+        {
+            "order": 0,
+            "key": "RUC",
+            "label": "RUC"
+        },
+        {
+            "order": 1,
+            "key": "CEDULA",
+            "label": "Cédula"
+        },
+        {
+            "order": 2,
+            "key": "PASAPORTE",
+            "label": "Pasaporte"
+        },
+        {
+            "order": 3,
+            "key": "CONSUMIDOR_FINAL",
+            "label": "Consumidor Final"
+        }
+    ],
+    "FuelType": [
+        {
+            "order": 0,
+            "key": "GASOLINE",
+            "label": "Gasolina"
+        },
+        {
+            "order": 1,
+            "key": "DIESEL",
+            "label": "Diésel"
+        },
+        {
+            "order": 2,
+            "key": "ELECTRIC",
+            "label": "Eléctrico"
+        },
+        {
+            "order": 3,
+            "key": "HYBRID",
+            "label": "Híbrido"
+        }
+    ],
+    "SlotType": [
+        {
+            "order": 0,
+            "key": "STANDARD",
+            "label": "Estándar"
+        },
+        {
+            "order": 1,
+            "key": "ACCESSIBLE",
+            "label": "Accesible"
+        },
+        {
+            "order": 2,
+            "key": "EV_CHARGING",
+            "label": "Carga EV"
+        },
+        {
+            "order": 3,
+            "key": "VIP",
+            "label": "VIP"
+        }
+    ],
+    "UsageStatus": [
+        {
+            "order": 0,
+            "key": "ACTIVE",
+            "label": "Activo"
+        },
+        {
+            "order": 1,
+            "key": "COMPLETED",
+            "label": "Completada"
+        },
+        {
+            "order": 2,
+            "key": "CANCELLED",
+            "label": "Cancelada"
+        },
+        {
+            "order": 3,
+            "key": "PAYED",
+            "label": "Pagado"
+        }
+    ],
+    "UserVehicleStatus": [
+        {
+            "order": 0,
+            "key": "ACTIVE",
+            "label": "Activo"
+        },
+        {
+            "order": 1,
+            "key": "PENDING",
+            "label": "Pendiente"
+        },
+        {
+            "order": 2,
+            "key": "REVOKED",
+            "label": "Revocado"
+        }
+    ],
+    "CardFunding": [
+        {
+            "order": 0,
+            "key": "CREDIT",
+            "label": "Crédito"
+        },
+        {
+            "order": 1,
+            "key": "DEBIT",
+            "label": "Débito"
+        },
+        {
+            "order": 2,
+            "key": "PREPAID",
+            "label": "Prepago"
+        }
+    ],
+    
+    "EntityStatus": [
+        {
+            "order": 0,
+            "key": "ACTIVE",
+            "label": "Activo"
+        },
+        {
+            "order": 1,
+            "key": "INACTIVE",
+            "label": "Inactivo"
+        }
+    ],
+    "ReservationStatus": [
+        {
+            "order": 0,
+            "key": "PENDING",
+            "label": "Pendiente"
+        },
+        {
+            "order": 1,
+            "key": "CONFIRMED",
+            "label": "Confirmada"
+        },
+        {
+            "order": 2,
+            "key": "ACTIVE",
+            "label": "Activo"
+        },
+        {
+            "order": 3,
+            "key": "COMPLETED",
+            "label": "Completada"
+        },
+        {
+            "order": 4,
+            "key": "CANCELLED",
+            "label": "Cancelada"
+        },
+        {
+            "order": 5,
+            "key": "NO_SHOW",
+            "label": "No se presentó"
+        }
+    ],
+    "UserAuthority": [
+        {
+            "order": 0,
+            "key": "ROLE_API_SYSTEM",
+            "label": "API de Sistema"
+        },
+        {
+            "order": 1,
+            "key": "ROLE_API_CLIENT",
+            "label": "API de Usuario"
+        },
+        {
+            "order": 2,
+            "key": "ROLE_CITIZEN",
+            "label": "Ciudadano"
+        },
+        {
+            "order": 3,
+            "key": "ROLE_OPERATOR",
+            "label": "Operador"
+        },
+        {
+            "order": 4,
+            "key": "ROLE_WEB_ADMIN",
+            "label": "Administrador Web"
+        },
+        {
+            "order": 5,
+            "key": "GROUP_SPARK",
+            "label": "Grupo Spark"
+        },
+        {
+            "order": 6,
+            "key": "GROUP_EMOV",
+            "label": "Grupo EMOV"
+        }
+    ],
+    "RateType": [
+        {
+            "order": 0,
+            "key": "HOURLY",
+            "label": "Por Hora"
+        },
+        {
+            "order": 1,
+            "key": "DAILY",
+            "label": "Por Día"
+        },
+        {
+            "order": 2,
+            "key": "FLAT",
+            "label": "Tarifa Fija"
+        }
+    ],
+    "WorkShiftStatus": [
+        {
+            "order": 0,
+            "key": "SCHEDULED",
+            "label": "Programado"
+        },
+        {
+            "order": 1,
+            "key": "IN_PROGRESS",
+            "label": "En Progreso"
+        },
+        {
+            "order": 2,
+            "key": "COMPLETED",
+            "label": "Completada"
+        },
+        {
+            "order": 3,
+            "key": "CANCELLED",
+            "label": "Cancelada"
+        },
+        {
+            "order": 4,
+            "key": "MISSED",
+            "label": "Inasistencia"
+        }
+    ],
+    "ParkingSystemOperationType": [
+        {
+            "order": 0,
+            "key": "CHECKOUT",
+            "label": "Consultar Valor a Pagar"
+        },
+        {
+            "order": 1,
+            "key": "CHARGE",
+            "label": "Notificar Pago"
+        },
+        {
+            "order": 2,
+            "key": "AVAILABILITY",
+            "label": "Consultar Disponibilidad"
+        }
+    ],
+    "UserVehicleRole": [
+        {
+            "order": 0,
+            "key": "OWNER",
+            "label": "Propietario"
+        },
+        {
+            "order": 1,
+            "key": "CO_OWNER",
+            "label": "Copropietario"
+        },
+        {
+            "order": 2,
+            "key": "DRIVER",
+            "label": "Conductor"
+        }
+    ],
+    "BillingType": [
+        {
+            "order": 0,
+            "key": "CREDIT_CARD",
+            "label": "Tarjeta de Crédito"
+        },
+        {
+            "order": 1,
+            "key": "DEBIT_CARD",
+            "label": "Tarjeta de Débito"
+        },
+        {
+            "order": 2,
+            "key": "DIGITAL_WALLET",
+            "label": "Billetera Digital"
+        },
+        {
+            "order": 3,
+            "key": "BANK_TRANSFER",
+            "label": "Transferencia Bancaria"
+        }
+    ]
+}
