@@ -15,7 +15,6 @@ const menuItems = [
         icon: <ParkingSquare size={18} />,
         children: [
             { label: 'Listado de estacionamientos', path: '/estacionamientos/listado' },
-            { label: 'Crear estacionamientos', path: '/estacionamientos/crear' },
         ],
     },
     

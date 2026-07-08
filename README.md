@@ -24,7 +24,7 @@ npm run dev
 ## Deploy en producción (Nginx)
 ##  Antes de hacer el build para producción
 
-En el archivo `src/axiosInstance.js`, debe **comentar** la línea de desarrollo y **descomentar** la de producción:
+En el archivo `src/utils/axiosInstance.js`, debe **comentar** la línea de desarrollo y **descomentar** la de producción:
 
 ```javascript
 //  Producción — descomentar esto:
