@@ -1,7 +1,8 @@
 import React from 'react'
 import Spinner from './Spinner'
+import { temas } from '../../styles/temas'
 
-const Table = ({ columnas = [], datos = []}) => {  
+const Table = ({ columnas = [], datos = []}) => {
 
     if (!datos.length) return (
         <div className="text-center py-10 text-gray-400 text-sm">
@@ -11,7 +12,7 @@ const Table = ({ columnas = [], datos = []}) => {
     return (
         <div className="overflow-x-auto rounded-lg border border-gray-300">
             <table className="w-full text-sm text-left ">
-                <thead className="bg-slate-700 text-white sticky top-0">
+                <thead className={`${temas.tabla.encabezado} sticky top-0`}>
                     <tr>
                         {columnas.map((col) => (
                             <th key={col.key} className="px-4 py-3 font-semibold">

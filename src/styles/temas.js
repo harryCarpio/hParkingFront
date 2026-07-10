@@ -38,6 +38,7 @@ export const temas = {
 
     },
     tabla: {
+        encabezado: 'bg-brand text-white',
         acciones: {
             base: ` p-2 rounded-lg cursor-pointer transition-all duration-200 
             hover:scale-105 active:scale-95`,
