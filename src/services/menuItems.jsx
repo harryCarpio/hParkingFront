@@ -23,14 +23,8 @@ const menuItems = [
         icon: <Settings size={18} />,
         children: [
             { label: 'Estacionamientos', path: '/estacionamientos/listado' },
-            {
-                id: 'usuarios',
-                label: 'Usuarios',
-                children: [
-                    { label: 'Usuarios de sistema', path: '/usuarios-sistema/listado' },
-                    { label: 'Usuarios de aplicaciones', path: '/usuariosapp/listado' },
-                ],
-            },
+            { label: 'Usuarios de sistema', path: '/usuarios-sistema/listado' },
+            { label: 'Usuarios de aplicaciones', path: '/usuariosapp/listado' },
         ],
     },
     {

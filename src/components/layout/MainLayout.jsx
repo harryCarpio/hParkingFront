@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
+import Breadcrumb from './Breadcrumb'
 import { Outlet } from 'react-router-dom'
 
 //este layout me permite unir el navbar y el sidbar para que sea rehusable en todas las
@@ -24,6 +25,7 @@ const MainLayout = () => {
                 />
 
                 <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+                    <Breadcrumb />
                     <Outlet />
                 </main>
             </div>

@@ -13,6 +13,12 @@ export const temas = {
         button: 'bg-slate-600 hover:bg-slate-800',
         userText: 'text-slate-300',
     },
+    breadcrumb: {
+        text: 'text-slate-500',
+        link: 'text-slate-500 hover:text-slate-800',
+        active: 'text-slate-700 font-semibold',
+        separator: 'text-slate-300',
+    },
     paginador: {
         button: `w-8 h-8 flex items-center justify-center rounded-lg
         border border-gray-200 text-gray-600
