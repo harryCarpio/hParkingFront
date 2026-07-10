@@ -11,6 +11,7 @@ import ListadoEstacionamientos from "./pages/estacionamientos/ListadoEstacionami
 import ListadoOperacionesSistemaParqueo from "./pages/operaciones/ListadoOperacionesSistemaParqueo"
 import ListadoUsuariosSistema from "./pages/usuariosSistema/ListadoUsuariosSistema"
 import ListadoPruebasApi from "./pages/pruebasApi/ListadoPruebasApi"
+import Usos from "./pages/estacionamiento/Usos"
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             </ProtectedRoute>
           }>
             <Route path="/panelAdministracion" element={<PanelAdministracion />} />
+            <Route path="/estacionamiento/usos" element={<Usos />} />
             <Route path="/estacionamientos/listado" element={<ListadoEstacionamientos />} />
             <Route path="/estacionamientos/crear" element={<EstacionamientosCrear />} />
             <Route path="/estacionamientos/:id/sistemas" element={<ListadoSistemasEstacionamiento />} />

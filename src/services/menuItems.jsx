@@ -1,4 +1,4 @@
-import { Activity, FlaskConical, Home, ParkingSquare, ServerCog, ShieldUser, Users } from 'lucide-react'
+import { FlaskConical, Home, ParkingSquare, Settings } from 'lucide-react'
 import React from 'react'
 
 const menuItems = [
@@ -10,29 +10,27 @@ const menuItems = [
         children: [],
     },
     {
-        id: 'estacionamientos',
-        label: 'Gestión de Estacionamientos',
+        id: 'estacionamiento',
+        label: 'Estacionamiento',
         icon: <ParkingSquare size={18} />,
         children: [
-            { label: 'Listado de estacionamientos', path: '/estacionamientos/listado' },
-        ],
-    },
-    
-    
-    {
-        id: 'usuarios-sistema',
-        label: 'Gestión de Usuarios de Sistema',
-        icon: <ShieldUser size={18} />,
-        children: [
-            { label: 'Lista de usuarios', path: '/usuarios-sistema/listado' },
+            { label: 'Usos', path: '/estacionamiento/usos' },
         ],
     },
     {
-        id: 'usuarios-app',
-        label: 'Gestión de Usuarios de Aplicación',
-        icon: <Users size={18} />,
+        id: 'configuraciones',
+        label: 'Configuraciones',
+        icon: <Settings size={18} />,
         children: [
-            { label: 'Lista de usuarios', path: '/usuariosapp/listado' },
+            { label: 'Estacionamientos', path: '/estacionamientos/listado' },
+            {
+                id: 'usuarios',
+                label: 'Usuarios',
+                children: [
+                    { label: 'Usuarios de sistema', path: '/usuarios-sistema/listado' },
+                    { label: 'Usuarios de aplicaciones', path: '/usuariosapp/listado' },
+                ],
+            },
         ],
     },
     {
