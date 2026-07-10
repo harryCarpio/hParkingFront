@@ -4,6 +4,8 @@ const Button = ({ texto, type = "button", onClick, disabled, cargando, variante 
       primary: "bg-brand hover:bg-brand-dark text-white",
       secondary: "bg-white hover:bg-gray-300 text-gray-700 border border-gray-400",
       danger: "bg-red-600 hover:bg-red-700 text-white",
+      //variante fija (no reacciona al tema seleccionado), para pantallas como Login que siempre usan Slate
+      slate: "bg-slate-700 hover:bg-slate-800 text-white",
   }
 
   const tamanios = {

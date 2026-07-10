@@ -72,6 +72,7 @@ console.log("ErrorCode:", err.response?.data?.errorCode);
                 <Button
                     texto="Iniciar Sesión"
                     type="submit"
+                    variante="slate"
                     tamanio="lg"
                     disabled={cargando}
                     cargando={cargando} />
