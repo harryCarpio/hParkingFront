@@ -22,7 +22,7 @@ npm run dev
 ```
 
 ## Deploy en producción (Nginx)
-##  Antes de hacer el build para producción
+###  Antes de hacer el build para producción
 
 En el archivo `src/utils/axiosInstance.js`, debe **comentar** la línea de desarrollo y **descomentar** la de producción:
 
@@ -58,41 +58,46 @@ Esto genera la carpeta `dist/` lista para producción.
 > **NO sobreescribir ese archivo** al subir el contenido de `dist/` — si se reemplaza
 > obtendrá errores de CORS y el proyecto no funcionará correctamente.
 
-DESPLEGAR O ACTUALIZAR VERSION SERVIDOR:
+### DESPLEGAR O ACTUALIZAR VERSION SERVIDOR:
 Ingresar al servidor por sftp y en la ruta. 
+```bash
 sftp://parking@148.72.168.213:222/home/parking/ngix/bin
-copiar el contenido que se encuentra dentro de lo carpeta que se creo localmente al ejecutar npm run build. 
+```
+Copiar el contenido que se encuentra dentro de lo carpeta que se creo localmente al ejecutar npm run build. 
 Esta carpeta tiene los siguientes archivos:
-carpeta assets
-index.html
-config.js
-vite.svg
+- carpeta assets
+- index.html
+- config.js
+- vite.svg
 
-se debe copiar la carpeta assets, index.html,  y viste.svg no copiar config.js ya quela que esta en el servidor ya esta con el proxy inverso que se configuro en nginx para conectar al back, en tal caso de reescribirse config.js para el servidor debe tener lo siguiente:
+Se debe copiar la carpeta assets, index.html,  y viste.svg no copiar config.js ya que la que esta en el servidor ya esta con el proxy inverso que se configuro en nginx para conectar al back, en tal caso de reescribirse config.js para el servidor debe tener lo siguiente:
+```js
 window.__APP_CONFIG__={
     API_URL: "/api"
 }
+```
 
-gitignore se ignora el archivo .env por seguridad pero este .env debe crear en la raiz del proyecto con esta informacion:
+gitignore se ignora el archivo `.env` por seguridad pero este `.env` debe crear en la raiz del proyecto con esta información:
+```sh
 VITE_HPARKING_API_URL = https://hparking-api.vrsoluciones.net solo para desarrollo
+```
 
 y a su vez en la carpeta public el config.js para desarrollo tiene esto:
+```js
 window.__APP_CONFIG__={
     API_URL: "https://hparking-api.vrsoluciones.net/api"
 }
+```
+Que basicamente al compilar para subir al servidor se copia este archivo en la carpeta `/dist`
+sin embargo, no se debe sobreescribir el `config.js` que ya existe en el servidor porq ese esta con el `proxy pass`
 
-que basicamente al compilar para subir al servidor se copia este archivo en la carpeta /dist
-sin embargo, no se debe sobreescribir el config.js que ya existe en el servidor porq ese esta con el proxy pass
-
-una vez que se haya copiado en la carpeta del servidor de nginx/bin
-en el terminal ejecutar lo siguinete para actualizar el docker:
-ingresar a la carpeta nginx
+Una vez que se haya copiado en la carpeta del servidor de `nginx/bin` en el terminal ejecutar lo siguiente para actualizar el docker:
+```sh
+# Ingresar a la carpeta nginx
 cd nginx
-luego dentro de esa carpeta ejecutar el script restart.sh
+# luego dentro de esa carpeta ejecutar el script restart.sh
 ./restart.sh
-este script tiene lo suficiente para actualizar el docker. y ya esta listo los cambiso publicado en el servidor
-```bash
-
+#este script tiene lo suficiente para actualizar el docker. y ya esta listo los cambiso publicado en el servidor
 ```
 
 ## Versión de Node.js
