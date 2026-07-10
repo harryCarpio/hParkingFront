@@ -1,25 +1,531 @@
 @import "tailwindcss";
-body {
-    background-color: rgb(241 245 249); /* slate-100 */
+
+@theme {
+  /* BRAND */
+  --color-brand: var(--brand-default);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-light: var(--brand-light);
+  --color-brand-subtle: var(--brand-subtle);
+  --color-brand-foreground: var(--brand-foreground);
+
+  /* ACCENT */
+  --color-accent: var(--accent-default);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-light: var(--accent-light);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* NEUTRAL */
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+
+  /* TEXT */
+  --color-text-heading: var(--text-heading);
+  --color-text-body: var(--text-body);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+  --color-text-link: var(--text-link);
+
+  /* BACKGROUND */
+  --color-bg-page: var(--bg-page);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-sunken: var(--bg-sunken);
+
+  /* BORDER */
+  --color-border: var(--border-default);
+  --color-border-strong: var(--border-strong);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
+
+  /* STATUS */
+  --color-success: var(--success-default);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning-default);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error-default);
+  --color-error-light: var(--error-light);
+  --color-info: var(--info-default);
+  --color-info-light: var(--info-light);
+
+  /* GRADIENTS */
+  --background-image-brand: var(--gradient-brand);
+  --background-image-accent: var(--gradient-accent);
+  --background-image-hero: var(--gradient-hero);
+  --background-image-surface: var(--gradient-surface);
+  --background-image-card: var(--gradient-card);
+
+  /* SHADOWS */
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-brand: var(--shadow-brand);
+
+  /* RADIUS */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-3xl: var(--radius-3xl);
+  --radius-full: var(--radius-full);
+
+  /* TYPOGRAPHY */
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+  --text-xs: var(--font-size-xs);
+  --text-sm: var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-lg: var(--font-size-lg);
+  --text-xl: var(--font-size-xl);
+  --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+  --text-4xl: var(--font-size-4xl);
+  --font-weight-normal: var(--font-weight-normal);
+  --font-weight-medium: var(--font-weight-medium);
+  --font-weight-bold: var(--font-weight-bold);
+  --font-weight-black: var(--font-weight-black);
+  --line-height-none: var(--line-height-none);
+  --line-height-tight: var(--line-height-tight);
+  --line-height-snug: var(--line-height-snug);
+  --line-height-normal: var(--line-height-normal);
+  --line-height-relaxed: var(--line-height-relaxed);
+  --line-height-loose: var(--line-height-loose);
+
+  /* SPACING */
+  --spacing-0: var(--spacing-0);
+  --spacing-1: var(--spacing-1);
+  --spacing-2: var(--spacing-2);
+  --spacing-3: var(--spacing-3);
+  --spacing-4: var(--spacing-4);
+  --spacing-5: var(--spacing-5);
+  --spacing-6: var(--spacing-6);
+  --spacing-8: var(--spacing-8);
+  --spacing-10: var(--spacing-10);
+  --spacing-12: var(--spacing-12);
+  --spacing-16: var(--spacing-16);
+  --spacing-20: var(--spacing-20);
+  --spacing-24: var(--spacing-24);
+  --spacing-32: var(--spacing-32);
+
+  /* COMMON */
+  --base-white: var(--base-white);
+  --base-black: var(--base-black);
+  --selection-background: var(--selection-background);
+  --selection-foreground: var(--selection-foreground);
+  --overlay: var(--overlay);
+  --ring: var(--ring);
+  --skeleton: var(--skeleton);
+
+  /* BRAND SHADES */
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  /* ACCENT SHADES */
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
+  --color-accent-900: var(--accent-900);
+  --color-accent-950: var(--accent-950);
+
+  /* SUCCESS SHADES */
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
+  --color-success-300: var(--success-300);
+  --color-success-400: var(--success-400);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
+  --color-success-800: var(--success-800);
+  --color-success-900: var(--success-900);
+  --color-success-950: var(--success-950);
+
+  /* WARNING SHADES */
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-200: var(--warning-200);
+  --color-warning-300: var(--warning-300);
+  --color-warning-400: var(--warning-400);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+  --color-warning-800: var(--warning-800);
+  --color-warning-900: var(--warning-900);
+  --color-warning-950: var(--warning-950);
+
+  /* ERROR SHADES */
+  --color-error-50: var(--error-50);
+  --color-error-100: var(--error-100);
+  --color-error-200: var(--error-200);
+  --color-error-300: var(--error-300);
+  --color-error-400: var(--error-400);
+  --color-error-500: var(--error-500);
+  --color-error-600: var(--error-600);
+  --color-error-700: var(--error-700);
+  --color-error-800: var(--error-800);
+  --color-error-900: var(--error-900);
+  --color-error-950: var(--error-950);
+
+  /* INFO SHADES */
+  --color-info-50: var(--info-50);
+  --color-info-100: var(--info-100);
+  --color-info-200: var(--info-200);
+  --color-info-300: var(--info-300);
+  --color-info-400: var(--info-400);
+  --color-info-500: var(--info-500);
+  --color-info-600: var(--info-600);
+  --color-info-700: var(--info-700);
+  --color-info-800: var(--info-800);
+  --color-info-900: var(--info-900);
+  --color-info-950: var(--info-950);
+
+  /* COMPONENT TOKENS (Semantic Aliases) */
+  --color-button-primary: var(--color-brand);
+  --color-button-primary-hover: var(--color-brand-dark);
+  --color-button-primary-text: var(--color-brand-foreground);
+  --color-card-bg: var(--color-bg-surface);
+  --color-card-border: var(--color-border-subtle);
+  --color-input-bg: var(--color-bg-sunken);
+  --color-input-border: var(--color-border);
+  --color-input-focus: var(--color-border-focus);
+
+  /* CHROME TOKENS (sidebar / navbar shell — structure differs per theme: light vs dark) */
+  --color-chrome-bg: var(--chrome-bg);
+  --color-chrome-text: var(--chrome-text);
+  --color-chrome-muted: var(--chrome-muted);
+  --color-chrome-hover: var(--chrome-hover);
+  --color-chrome-active: var(--chrome-active);
+  --color-chrome-border: var(--chrome-border);
+  --color-emphasis: var(--emphasis);
+
+  /* LAYOUT TOKENS */
+  --container-width: 1280px;
+  --section-padding: 80px;
+  --card-padding: 24px;
+}
+
+/* Tema por defecto: Emerald green */
+:root {
+  /* BRAND */
+  --brand-default: hsl(152, 85%, 22%);
+  --brand-dark: hsl(146, 84%, 17%);
+  --brand-light: hsl(143, 40%, 44%);
+  --brand-subtle: hsl(152, 100%, 22%);
+  --brand-foreground: hsl(0, 0%, 100%);
+
+  /* ACCENT */
+  --accent-default: hsl(48, 100%, 50%);
+  --accent-dark: hsl(47, 85%, 45%);
+  --accent-light: hsl(60, 85%, 66%);
+  --accent-subtle: hsl(48, 100%, 50%);
+  --accent-foreground: hsl(240, 6%, 10%);
+
+  /* NEUTRAL */
+  --neutral-50: hsl(210, 7%, 95%);
+  --neutral-100: hsl(210, 2%, 83%);
+  --neutral-200: hsl(210, 1%, 72%);
+  --neutral-300: hsl(210, 1%, 62%);
+  --neutral-400: hsl(210, 1%, 51%);
+  --neutral-500: hsl(210, 1%, 41%);
+  --neutral-600: hsl(210, 1%, 31%);
+  --neutral-700: hsl(210, 2%, 22%);
+  --neutral-800: hsl(240, 1%, 14%);
+  --neutral-900: hsl(210, 8%, 5%);
+
+  /* TEXT */
+  --text-heading: hsl(221, 39%, 11%);
+  --text-body: hsl(215, 14%, 34%);
+  --text-muted: hsl(210, 1%, 41%);
+  --text-inverse: hsl(0, 0%, 100%);
+  --text-link: hsl(152, 100%, 22%);
+
+  /* BACKGROUND */
+  --bg-page: hsl(210, 20%, 98%);
+  --bg-surface: hsl(0, 0%, 100%);
+  --bg-elevated: hsl(220, 14%, 96%);
+  --bg-sunken: hsl(220, 13%, 91%);
+
+  /* BORDER */
+  /* nota: el archivo de origen definia estos tres en negro puro (hsl(0,0%,0%)),
+     lo que rompia cualquier borde por defecto de la app; se usan grises suaves
+     acordes a la paleta fria del resto del tema */
+  --border-default: hsl(220, 13%, 91%);
+  --border-strong: hsl(220, 9%, 80%);
+  --border-subtle: hsl(220, 14%, 96%);
+  --border-focus: hsl(152, 85%, 22%);
+
+  /* STATUS */
+  --success-default: hsl(142, 65%, 36%);
+  --success-light: hsl(135, 66%, 67%);
+  --warning-default: hsl(38, 90%, 50%);
+  --warning-light: hsl(51, 100%, 70%);
+  --error-default: hsl(0, 84%, 60%);
+  --error-light: hsl(6, 100%, 76%);
+  --info-default: hsl(217, 90%, 60%);
+  --info-light: hsl(211, 100%, 80%);
+
+  /* GRADIENTS */
+  --gradient-brand: linear-gradient(135deg, hsl(145.94deg 100% 17.14%) 0%, #ffcc00 100%);
+  --gradient-accent: linear-gradient(135deg, #ffcc00 0%, #ffff50 100%);
+  --gradient-hero: linear-gradient(135deg, hsl(145.94deg 100% 17.14%) 0%, hsl(151.64deg 100% 21.57%) 50%, #ffcc00 100%);
+  --gradient-surface: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);
+  --gradient-card: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+
+  /* SHADOWS */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-brand: 0 0 20px rgb(31 128 224 / 0.2);
+
+  /* RADIUS */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-full: 9999px;
+
+  /* TYPOGRAPHY */
+  --font-family-sans: Inter, system-ui, -apple-system, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* SPACING */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-32: 128px;
+
+  /* COMMON */
+  --base-white: #ffffff;
+  --base-black: #000000;
+  --selection-background: rgb(0 110 58 / 0.3);
+  --selection-foreground: inherit;
+  --overlay: rgba(0, 0, 0, 0.4);
+  --ring: rgb(0 110 58 / 0.4);
+  --skeleton: #d3d4d5;
+
+  /* BRAND SHADES */
+  --brand-50: hsl(139, 100%, 93%);
+  --brand-100: hsl(139, 61%, 88%);
+  --brand-200: hsl(140, 51%, 78%);
+  --brand-300: hsl(142, 45%, 66%);
+  --brand-400: hsl(143, 33%, 53%);
+  --brand-500: hsl(145, 38%, 40%);
+  --brand-600: hsl(147, 56%, 29%);
+  --brand-700: hsl(152, 100%, 18%);
+  --brand-800: hsl(149, 100%, 13%);
+  --brand-900: hsl(145, 100%, 9%);
+  --brand-950: hsl(132, 100%, 6%);
+
+  /* ACCENT SHADES */
+  --accent-50: hsl(51, 100%, 85%);
+  --accent-100: hsl(44, 100%, 82%);
+  --accent-200: hsl(44, 90%, 68%);
+  --accent-300: hsl(46, 100%, 45%);
+  --accent-400: hsl(44, 100%, 39%);
+  --accent-500: hsl(42, 100%, 32%);
+  --accent-600: hsl(38, 100%, 27%);
+  --accent-700: hsl(33, 100%, 22%);
+  --accent-800: hsl(31, 100%, 16%);
+  --accent-900: hsl(28, 100%, 12%);
+  --accent-950: hsl(17, 100%, 8%);
+
+  /* SUCCESS SHADES */
+  --success-50: hsl(132, 100%, 91%);
+  --success-100: hsl(131, 76%, 87%);
+  --success-200: hsl(133, 63%, 77%);
+  --success-300: hsl(135, 56%, 63%);
+  --success-400: hsl(138, 42%, 50%);
+  --success-500: hsl(142, 66%, 35%);
+  --success-600: hsl(143, 100%, 23%);
+  --success-700: hsl(133, 100%, 18%);
+  --success-800: hsl(127, 100%, 14%);
+  --success-900: hsl(122, 100%, 9%);
+  --success-950: hsl(120, 100%, 6%);
+
+  /* WARNING SHADES */
+  --warning-50: hsl(43, 100%, 86%);
+  --warning-100: hsl(37, 100%, 84%);
+  --warning-200: hsl(35, 100%, 73%);
+  --warning-300: hsl(36, 97%, 56%);
+  --warning-400: hsl(37, 100%, 43%);
+  --warning-500: hsl(33, 100%, 35%);
+  --warning-600: hsl(28, 100%, 30%);
+  --warning-700: hsl(23, 100%, 25%);
+  --warning-800: hsl(20, 100%, 19%);
+  --warning-900: hsl(16, 100%, 13%);
+  --warning-950: hsl(1, 100%, 10%);
+
+  /* ERROR SHADES */
+  --error-50: hsl(12, 100%, 91%);
+  --error-100: hsl(9, 100%, 88%);
+  --error-200: hsl(6, 100%, 81%);
+  --error-300: hsl(3, 100%, 72%);
+  --error-400: hsl(1, 100%, 66%);
+  --error-500: hsl(358, 71%, 52%);
+  --error-600: hsl(354, 100%, 36%);
+  --error-700: hsl(0, 100%, 31%);
+  --error-800: hsl(0, 100%, 24%);
+  --error-900: hsl(0, 100%, 17%);
+  --error-950: hsl(0, 100%, 13%);
+
+  /* INFO SHADES */
+  --info-50: hsl(189, 100%, 90%);
+  --info-100: hsl(199, 100%, 88%);
+  --info-200: hsl(204, 100%, 80%);
+  --info-300: hsl(207, 100%, 70%);
+  --info-400: hsl(213, 100%, 64%);
+  --info-500: hsl(214, 78%, 51%);
+  --info-600: hsl(213, 100%, 39%);
+  --info-700: hsl(217, 100%, 33%);
+  --info-800: hsl(219, 100%, 25%);
+  --info-900: hsl(222, 100%, 19%);
+  --info-950: hsl(233, 100%, 15%);
+
+  /* CHROME: sidebar/navbar en Emerald son claros (blancos), con el verde como acento */
+  --chrome-bg: var(--bg-surface);
+  --chrome-text: var(--neutral-800);
+  --chrome-muted: var(--neutral-500);
+  --chrome-hover: var(--brand-50);
+  --chrome-active: var(--brand-default);
+  --chrome-border: var(--neutral-200);
+  --emphasis: var(--neutral-900);
+}
+
+/* Tema "Slate": reproduce la paleta gris-azulada original de la app */
+[data-theme="slate"] {
+  --brand-default: hsl(215, 25%, 27%);
+  --brand-dark: hsl(217, 33%, 17%);
+  --brand-light: hsl(215, 16%, 47%);
+  --brand-subtle: hsl(215, 19%, 35%);
+  --brand-foreground: hsl(0, 0%, 100%);
+
+  --accent-default: hsl(224, 64%, 33%);
+  --accent-dark: hsl(226, 71%, 24%);
+  --accent-light: hsl(221, 83%, 53%);
+  --accent-subtle: hsl(224, 64%, 33%);
+  --accent-foreground: hsl(0, 0%, 100%);
+
+  --text-link: hsl(224, 64%, 33%);
+  --border-focus: hsl(224, 64%, 33%);
+  --bg-page: hsl(213, 33%, 96%);
+
+  --brand-50: hsl(210, 40%, 98%);
+  --brand-100: hsl(210, 40%, 94%);
+  --brand-200: hsl(214, 32%, 87%);
+  --brand-300: hsl(213, 27%, 76%);
+  --brand-400: hsl(215, 20%, 60%);
+  --brand-500: hsl(215, 16%, 47%);
+  --brand-600: hsl(215, 19%, 35%);
+  --brand-700: hsl(215, 25%, 27%);
+  --brand-800: hsl(217, 33%, 17%);
+  --brand-900: hsl(222, 47%, 11%);
+  --brand-950: hsl(224, 50%, 6%);
+
+  /* CHROME: sidebar/navbar en Slate se mantienen oscuros, como el diseño original */
+  --chrome-bg: var(--brand-default);
+  --chrome-text: var(--brand-foreground);
+  --chrome-muted: rgba(255, 255, 255, 0.7);
+  --chrome-hover: var(--brand-dark);
+  --chrome-active: var(--brand-light);
+  --chrome-border: rgba(255, 255, 255, 0.15);
+  --emphasis: var(--accent-default);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-body);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text-heading);
+    font-weight: 700;
+  }
+  a { color: var(--color-text-link); }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  .bg-elevated { background-color: var(--color-bg-elevated); }
+  .bg-sunken { background-color: var(--color-bg-sunken); }
+  .shadow-brand { box-shadow: var(--shadow-brand); }
 }
 
 .bg-celestevr {
-    background-color: rgb(32, 114, 185);
+    background-color: var(--color-accent);
 }
 .bg-celestevr:hover {
-    background-color: rgb(42, 130, 205); 
+    background-color: var(--color-accent-dark);
 }
 .text-celestevr{
-    color: rgb(32, 114, 185);
+    color: var(--color-accent);
 }
 
 .text-celestevr:hover{
-    color: rgb(42, 130, 205);
+    color: var(--color-accent-dark);
 }
 .accent-celestevr {
-    accent-color: rgb(32, 114, 185);
+    accent-color: var(--color-accent);
 }
 
 .accent-celestevr:hover {
-    accent-color: rgb(42, 130, 205);
+    accent-color: var(--color-accent-dark);
 }

@@ -5,11 +5,19 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import SideBarMenuItem from '../ui/SideBarMenuItem';
 import { temas } from '../../styles/temas';
 import { X } from 'lucide-react';
+import useTema from '../../hooks/useTema';
+
+const temasDisponibles = [
+    { id: 'slate', label: 'Slate', swatch: 'bg-slate-700' },
+    { id: 'emerald', label: 'Emerald green', swatch: 'bg-emerald-600' },
+]
+
 const Sidebar = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const sidebarRef = useRef(null)
     const dropdownRef = useRef(null)
+    const { tema, setTema } = useTema()
 
     const [openId, setOpenId] = useState(null);
     //posicion en pantalla del dropdown flotante (modo colapsado), calculada desde el icono clickeado
@@ -69,14 +77,14 @@ const Sidebar = ({ isOpen, onClose }) => {
     const flyoutItem = !isOpen ? menuItems.find((item) => item.id === openId) : null
 
     return (
-        <aside ref={sidebarRef} className={`${isOpen ? 'w-64' : 'w-64 lg:w-20'} min-h-screen ${temas.sidebar.bg} flex flex-col py-4 px-3 shadow-xl
+        <aside ref={sidebarRef} className={`${isOpen ? 'w-64' : 'w-64 lg:w-20'} h-full ${temas.sidebar.bg} flex flex-col py-4 px-3 shadow-xl
         fixed  inset-y-0 left-0 z-30
         transform transition-all duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:static lg:translate-x-0 lg:z-auto lg:flex
         `}>
             <div className="flex justify-end mb-3 lg:hidden">
-                <button onClick={onClose} className="text-white hover:text-blue-200 transition-colors">
+                <button onClick={onClose} className={`${temas.sidebar.text} hover:opacity-70 transition-opacity`}>
                     <X size={20} />
                 </button>
             </div>
@@ -109,7 +117,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                             transition-colors duration-150
                                              ${isActive
                                                         ? `${temas.sidebar.childActive} text-white  text-sm`
-                                                        : `${temas.sidebar.childText} ${temas.sidebar.childHover} hover:text-white`
+                                                        : `${temas.sidebar.childText} ${temas.sidebar.childHover} ${temas.sidebar.childHoverText}`
                                                     }`}>
 
                                                 {child.label}
@@ -124,6 +132,25 @@ const Sidebar = ({ isOpen, onClose }) => {
                 )
             })}
 
+            {/*Selector de tema, siempre al fondo del sidebar */}
+            <div className={`mt-auto pt-3 border-t ${temas.sidebar.border} flex gap-2 ${isOpen ? 'px-1' : 'flex-col items-center'}`}>
+                {temasDisponibles.map((t) => {
+                    const seleccionado = tema === t.id
+                    return (
+                        <button
+                            key={t.id}
+                            onClick={() => setTema(t.id)}
+                            title={t.label}
+                            className={`flex items-center gap-2 rounded-lg transition-all duration-200
+                            ${isOpen ? 'flex-1 px-3 py-2' : 'p-2'}
+                            ${seleccionado ? 'bg-chrome-hover' : 'hover:bg-chrome-hover'}`}>
+                            <span className={`w-4 h-4 rounded-full flex-shrink-0 ${t.swatch} ${seleccionado ? 'ring-2 ring-chrome-text' : 'ring-1 ring-chrome-border'}`} />
+                            {isOpen && <span className={`text-xs font-medium ${temas.sidebar.text} truncate`}>{t.label}</span>}
+                        </button>
+                    )
+                })}
+            </div>
+
             {/*Submenu como dropdown flotante, modo colapsado (solo iconos).
             Se renderiza en un portal sobre document.body para que quede siempre por encima
             de cualquier otro elemento de la pagina, sin importar el stacking context del contenido. */}
@@ -132,7 +159,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                     ref={dropdownRef}
                     style={{ position: 'fixed', top: flyoutPos.top, left: flyoutPos.left }}
                     className={`z-[9999] w-56 ${temas.sidebar.bg} rounded-lg shadow-xl border ${temas.sidebar.border} py-2 px-2`}>
-                    <p className="px-2 pb-2 mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 border-b border-slate-600">
+                    <p className={`px-2 pb-2 mb-1 text-xs font-semibold uppercase tracking-wide ${temas.sidebar.childText} border-b ${temas.sidebar.border}`}>
                         {flyoutItem.label}
                     </p>
                     <div className="flex flex-col gap-1">
@@ -145,7 +172,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                                     transition-colors duration-150
                                      ${isActive
                                             ? `${temas.sidebar.childActive} text-white`
-                                            : `${temas.sidebar.childText} ${temas.sidebar.childHover} hover:text-white`
+                                            : `${temas.sidebar.childText} ${temas.sidebar.childHover} ${temas.sidebar.childHoverText}`
                                         }`}>
                                     {child.label}
                                 </button>

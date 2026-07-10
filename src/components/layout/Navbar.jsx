@@ -26,28 +26,28 @@ const Navbar = ({ onMenuClick }) => {
     }, [])
 
     return (
-        <nav className={`sticky top-0 z-30 w-full ${temas.navbar.bg} text-white px-6 py-3 flex items-center justify-between shadow-md`}
+        <nav className={`sticky top-0 z-30 w-full ${temas.navbar.bg} ${temas.navbar.text} border-b ${temas.navbar.border} px-6 py-3 flex items-center justify-between shadow-md`}
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "center" }}>
 
             <div className="flex items-center gap-3">
                 <button
                     onClick={onMenuClick}
-                    className=" text-white hover:text-blue-200 transition-colors"
+                    className="hover:opacity-70 transition-opacity"
                 >
                     <Menu size={22} />
                 </button>
                 <span className="text-xl font-bold tracking-wide">hParking</span>
 
             </div>
-            
+
             <div className="flex justify-end" ref={avatarRef}>
                 <div className="relative">
                     <button
                         onClick={() => setMenuAbiert(!menuAbierto)}
-                        title={usuario?.name || "Usuario"} 
-                        className="w-9 h-9 rounded-full bg-celestevr border border-white/25 
+                        title={usuario?.name || "Usuario"}
+                        className={`w-9 h-9 rounded-full bg-celestevr text-accent-foreground border ${temas.navbar.border}
                             flex items-center justify-center text-sm font-semibold
-                             transition duration-200"
+                             transition duration-200`}
                     >
                         {getIniciales(usuario?.name)}
                     </button>

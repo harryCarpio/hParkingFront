@@ -12,7 +12,7 @@ const SideBarMenuItem = ({ icon, label, isOpen, hasChildren = false, expanded = 
             onClick={onClick}
             title={!expanded ? label : undefined}
             className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold
-        text-white rounded-lg transition-all duration-200
+        ${temas.sidebar.text} rounded-lg transition-all duration-200
          ${temas.sidebar.hover} active:scale-[0.98]
         ${isOpen ? temas.sidebar.active : 'bg-transparent'}
         ${!expanded ? 'lg:justify-center' : ''}`
