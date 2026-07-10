@@ -19,7 +19,7 @@ const SideBarMenuItem = ({ icon, label, isOpen, hasChildren = false, expanded = 
             }
         >
 
-            <span className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+            <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
                 {icon}
             </span>
             <span className={`flex-1 text-left leading-tight ${!expanded ? 'lg:hidden' : ''}`}>{label}</span>

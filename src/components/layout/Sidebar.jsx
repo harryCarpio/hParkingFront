@@ -85,7 +85,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 const hasChildren = item.children && item.children.length > 0
 
                 return (
-                    <div key={item.id} className="mb-1 sidebar-item-divider">
+                    <div key={item.id} className="mb-1">
                         {/*Menu padre */}
                         <SideBarMenuItem
                             icon={item.icon}
