@@ -15,6 +15,7 @@ const menuItems = [
         icon: <ParkingSquare size={22} />,
         children: [
             { label: 'Usos', path: '/estacionamiento/usos' },
+            { label: 'Facturas', path: '/estacionamiento/facturas' },
         ],
     },
     {

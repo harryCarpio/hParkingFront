@@ -13,6 +13,7 @@ import ListadoOperacionesSistemaParqueo from "./pages/operaciones/ListadoOperaci
 import ListadoUsuariosSistema from "./pages/usuariosSistema/ListadoUsuariosSistema"
 import ListadoPruebasApi from "./pages/pruebasApi/ListadoPruebasApi"
 import Usos from "./pages/estacionamiento/Usos"
+import Facturas from "./pages/estacionamiento/Facturas"
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
             }>
               <Route path="/panelAdministracion" element={<PanelAdministracion />} />
               <Route path="/estacionamiento/usos" element={<Usos />} />
+              <Route path="/estacionamiento/facturas" element={<Facturas />} />
               <Route path="/estacionamientos/listado" element={<ListadoEstacionamientos />} />
               <Route path="/estacionamientos/crear" element={<EstacionamientosCrear />} />
               <Route path="/estacionamientos/:id/sistemas" element={<ListadoSistemasEstacionamiento />} />

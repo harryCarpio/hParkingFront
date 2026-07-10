@@ -94,6 +94,23 @@ export const FALLBACKS = {
 
 }
 
+//UsageStatus es un enum fijo del backend (no viene del catalogo de diccionario de datos)
+export const USAGE_STATUS_OPTIONS = [
+    { key: "ACTIVE", label: "Activo" },
+    { key: "COMPLETED", label: "Completado" },
+    { key: "CANCELLED", label: "Cancelado" },
+    { key: "PAYED", label: "Pagado" },
+]
+
+//SyncStatus es un enum fijo del backend (no viene del catalogo de diccionario de datos)
+export const SYNC_STATUS_OPTIONS = [
+    { key: "PENDING", label: "Pendiente" },
+    { key: "IN_PROGRESS", label: "En progreso" },
+    { key: "SUCCEEDED", label: "Exitoso" },
+    { key: "FAILED", label: "Fallido" },
+    { key: "DEAD", label: "Agotado" },
+]
+
 //Ayuda a mostrar la palabra para el usuario en base al key, si no se encuetra muestra la key en base al diciconario
 export const labelFromKey = (opciones, key) => {
     const encontrado = opciones.find((opt) => opt.key === key);

@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { temas } from '../../styles/temas'
-import { getUsosEstacionamiento } from '../../services/parkingUsageService'
-import { USAGE_STATUS_OPTIONS, labelFromKey } from '../../services/diccionarioDatos'
+import { getFacturasSyncStatus } from '../../services/invoiceSyncStatusService'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
-import DiccionarioDatosSelect from '../../components/ui/DiccionarioDatosSelect'
 import Spinner from '../../components/ui/Spinner'
 import Pagination from '../../components/ui/Pagination'
 import Table from '../../components/ui/Table'
+import BadgeSyncStatus from '../../components/facturas/BadgeSyncStatus'
+import ModalDetalleSincronizacion from '../../components/facturas/ModalDetalleSincronizacion'
 
 const FILTROS_VACIOS = {
-  parkingTicketNumber: '',
-  plate: '',
-  status: '',
   from: '',
   to: '',
 }
@@ -27,7 +24,7 @@ const formatearFecha = (iso) => (
   iso ? new Date(iso).toLocaleString() : '—'
 )
 
-const Usos = () => {
+const Facturas = () => {
   const [datos, setDatos] = useState([])
   const [paginaActual, setPaginaActual] = useState(0)
   const [totalPaginas, setTotalPaginas] = useState(0)
@@ -36,15 +33,13 @@ const Usos = () => {
   const [cargando, setCargando] = useState(false)
   const [errorMensaje, setErrorMensaje] = useState(null)
   const [filtros, setFiltros] = useState(FILTROS_VACIOS)
+  const [syncStatusSeleccionado, setSyncStatusSeleccionado] = useState(null)
 
   const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros) => {
     setCargando(true)
     setErrorMensaje(null)
     try {
-      const { data } = await getUsosEstacionamiento(pagina, size, {
-        parkingTicketNumber: filtrosActuales.parkingTicketNumber,
-        plate: filtrosActuales.plate,
-        status: filtrosActuales.status,
+      const { data } = await getFacturasSyncStatus(pagina, size, {
         from: aInstanteUtc(filtrosActuales.from),
         to: aInstanteUtc(filtrosActuales.to),
       })
@@ -83,41 +78,37 @@ const Usos = () => {
   }
 
   const columnas = [
-    { key: 'parkingTicketNumber', label: 'N° Ticket' },
-    { key: 'plate', label: 'Placa' },
-    { key: 'parkingName', label: 'Estacionamiento' },
-    { key: 'entryTime', label: 'Entrada', render: (fila) => formatearFecha(fila.entryTime) },
-    { key: 'exitTime', label: 'Salida', render: (fila) => formatearFecha(fila.exitTime) },
-    { key: 'status', label: 'Estado', render: (fila) => labelFromKey(USAGE_STATUS_OPTIONS, fila.status) },
+    { key: 'sequenceNumber', label: 'N° Secuencial', render: (fila) => fila.invoice.sequenceNumber },
+    { key: 'clientName', label: 'Cliente', render: (fila) => fila.invoice.clientName },
+    { key: 'plate', label: 'Placa', render: (fila) => fila.invoice.plate },
+    { key: 'billingAt', label: 'Facturado', render: (fila) => formatearFecha(fila.invoice.billingAt) },
+    { key: 'externalParkingId', label: 'Parqueadero', render: (fila) => fila.invoice.externalParkingId },
+    { key: 'minuteQuantity', label: 'Minutos', render: (fila) => fila.invoice.minuteQuantity },
+    { key: 'createdBy', label: 'Creado por' },
+    {
+      key: 'syncStatuses',
+      label: 'Sincronización',
+      render: (fila) => (
+        <div className="flex gap-2 flex-wrap">
+          {fila.syncStatuses.map((syncStatus) => (
+            <BadgeSyncStatus
+              key={syncStatus.id}
+              syncStatus={syncStatus}
+              onClick={setSyncStatusSeleccionado}
+            />
+          ))}
+        </div>
+      ),
+    },
   ]
 
   return (
     <div className="flex flex-col gap-4">
       <h1 className={`text-md ${temas.texto.textoNegritaAzul}`}>
-        Usos
+        Facturas
       </h1>
 
       <form onSubmit={handleBuscar} className="flex items-end gap-4 flex-wrap">
-        <Input
-          label="N° Ticket"
-          name="parkingTicketNumber"
-          value={filtros.parkingTicketNumber}
-          onChange={handleFiltroChange}
-        />
-        <Input
-          label="Placa"
-          name="plate"
-          value={filtros.plate}
-          onChange={handleFiltroChange}
-        />
-        <DiccionarioDatosSelect
-          label="Estado"
-          name="status"
-          value={filtros.status}
-          onChange={handleFiltroChange}
-          opcionesQuemadas={USAGE_STATUS_OPTIONS}
-          placeHolder="Todos"
-        />
         <Input
           label="Desde"
           type="datetime-local"
@@ -171,8 +162,15 @@ const Usos = () => {
           <Table columnas={columnas} datos={datos} />
         </>
       )}
+
+      {syncStatusSeleccionado && (
+        <ModalDetalleSincronizacion
+          syncStatus={syncStatusSeleccionado}
+          onClose={() => setSyncStatusSeleccionado(null)}
+        />
+      )}
     </div>
   )
 }
 
-export default Usos
+export default Facturas
