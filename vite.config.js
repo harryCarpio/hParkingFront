@@ -5,16 +5,16 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(),
-    tailwindcss(),
+  tailwindcss(),
   ],
-  server:{
+  server: {
     proxy: {
       '/api': {
-        target: 'https://hparking-api.vrsoluciones.net',
+        target: 'http://192.168.100.250:8080',
         changeOrigin: true,
         secure: true,
         headers: {
-          Origin: 'https://hparking-api.vrsoluciones.net'  
+          Origin: 'http://192.168.100.250:8080'
         }
       }
     }

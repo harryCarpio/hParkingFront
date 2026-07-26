@@ -36,8 +36,9 @@ const Usos = () => {
   const [cargando, setCargando] = useState(false)
   const [errorMensaje, setErrorMensaje] = useState(null)
   const [filtros, setFiltros] = useState(FILTROS_VACIOS)
+  const [ordenamiento, setOrdenamiento] = useState(null)
 
-  const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros) => {
+  const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros, ordenamientoActual = ordenamiento) => {
     setCargando(true)
     setErrorMensaje(null)
     try {
@@ -47,6 +48,7 @@ const Usos = () => {
         status: filtrosActuales.status,
         from: aInstanteUtc(filtrosActuales.from),
         to: aInstanteUtc(filtrosActuales.to),
+        sort: ordenamientoActual ? `${ordenamientoActual.campo},${ordenamientoActual.direccion}` : undefined,
       })
       setDatos(data.content)
       setPaginaActual(data.number)
@@ -82,13 +84,22 @@ const Usos = () => {
     cargar(0, porPagina, FILTROS_VACIOS)
   }
 
+  const handleOrdenar = (campo) => {
+    const nuevoOrdenamiento = {
+      campo,
+      direccion: ordenamiento?.campo === campo && ordenamiento.direccion === 'asc' ? 'desc' : 'asc',
+    }
+    setOrdenamiento(nuevoOrdenamiento)
+    cargar(0, porPagina, filtros, nuevoOrdenamiento)
+  }
+
   const columnas = [
-    { key: 'parkingTicketNumber', label: 'N° Ticket' },
-    { key: 'plate', label: 'Placa' },
+    { key: 'parkingTicketNumber', label: 'N° Ticket', ordenable: true },
+    { key: 'plate', label: 'Placa', ordenable: true },
     { key: 'parkingName', label: 'Estacionamiento' },
-    { key: 'entryTime', label: 'Entrada', render: (fila) => formatearFecha(fila.entryTime) },
-    { key: 'exitTime', label: 'Salida', render: (fila) => formatearFecha(fila.exitTime) },
-    { key: 'status', label: 'Estado', render: (fila) => labelFromKey(USAGE_STATUS_OPTIONS, fila.status) },
+    { key: 'entryTime', label: 'Entrada', render: (fila) => formatearFecha(fila.entryTime), ordenable: true },
+    { key: 'exitTime', label: 'Salida', render: (fila) => formatearFecha(fila.exitTime), ordenable: true },
+    { key: 'status', label: 'Estado', render: (fila) => labelFromKey(USAGE_STATUS_OPTIONS, fila.status), ordenable: true },
   ]
 
   return (
@@ -168,7 +179,7 @@ const Usos = () => {
             onCambiarPagina={(pagina) => cargar(pagina, porPagina, filtros)}
             onCambiarPorPagina={(nuevoSize) => { setPorPagina(nuevoSize) }}
           />
-          <Table columnas={columnas} datos={datos} />
+          <Table columnas={columnas} datos={datos} ordenamiento={ordenamiento} onOrdenar={handleOrdenar} />
         </>
       )}
     </div>

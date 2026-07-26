@@ -1,11 +1,11 @@
 import axios from "axios"
 
+
 /*
 const api = axios.create({ //Produccion
     baseURL: window.__APP_CONFIG__?.API_URL || import.meta.env.VITE_HPARKING_API_URL
 });
 */
-
 
 const api = axios.create({ //Desarrollo:
     baseURL: '/api'
@@ -39,14 +39,14 @@ api.interceptors.response.use(
     async (error) => {
         const respuesta = error.config;
         const esRutaAuth = respuesta.url?.includes('/auth/');
-        if(esRutaAuth){
+        if (esRutaAuth) {
             return Promise.reject(error);
         }
-        if(error.response?.status === 401 && !respuesta._retry){
+        if (error.response?.status === 401 && !respuesta._retry) {
             respuesta._retry = true;
             try {
                 const refreshToken = sessionStorage.getItem("refreshToken")
-                
+
                 const { data } = await api.post(
                     '/auth/refresh',
                     { refreshToken }

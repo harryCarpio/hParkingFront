@@ -34,14 +34,16 @@ const Facturas = () => {
   const [errorMensaje, setErrorMensaje] = useState(null)
   const [filtros, setFiltros] = useState(FILTROS_VACIOS)
   const [syncStatusSeleccionado, setSyncStatusSeleccionado] = useState(null)
+  const [ordenamiento, setOrdenamiento] = useState(null)
 
-  const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros) => {
+  const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros, ordenamientoActual = ordenamiento) => {
     setCargando(true)
     setErrorMensaje(null)
     try {
       const { data } = await getFacturasSyncStatus(pagina, size, {
         from: aInstanteUtc(filtrosActuales.from),
         to: aInstanteUtc(filtrosActuales.to),
+        sort: ordenamientoActual ? `${ordenamientoActual.campo},${ordenamientoActual.direccion}` : undefined,
       })
       setDatos(data.content)
       setPaginaActual(data.number)
@@ -77,13 +79,22 @@ const Facturas = () => {
     cargar(0, porPagina, FILTROS_VACIOS)
   }
 
+  const handleOrdenar = (campo) => {
+    const nuevoOrdenamiento = {
+      campo,
+      direccion: ordenamiento?.campo === campo && ordenamiento.direccion === 'asc' ? 'desc' : 'asc',
+    }
+    setOrdenamiento(nuevoOrdenamiento)
+    cargar(0, porPagina, filtros, nuevoOrdenamiento)
+  }
+
   const columnas = [
-    { key: 'sequenceNumber', label: 'N° Secuencial', render: (fila) => fila.invoice.sequenceNumber },
-    { key: 'clientName', label: 'Cliente', render: (fila) => fila.invoice.clientName },
-    { key: 'plate', label: 'Placa', render: (fila) => fila.invoice.plate },
-    { key: 'billingAt', label: 'Facturado', render: (fila) => formatearFecha(fila.invoice.billingAt) },
-    { key: 'externalParkingId', label: 'Parqueadero', render: (fila) => fila.invoice.externalParkingId },
-    { key: 'minuteQuantity', label: 'Minutos', render: (fila) => fila.invoice.minuteQuantity },
+    { key: 'sequenceNumber', label: 'N° Secuencial', render: (fila) => fila.invoice.sequenceNumber, ordenable: true },
+    { key: 'clientName', label: 'Cliente', render: (fila) => fila.invoice.clientName, ordenable: true },
+    { key: 'plate', label: 'Placa', render: (fila) => fila.invoice.plate, ordenable: true },
+    { key: 'billingAt', label: 'Facturado', render: (fila) => formatearFecha(fila.invoice.billingAt), ordenable: true },
+    { key: 'parkingName', label: 'Parqueadero', render: (fila) => fila.invoice.parkingName },
+    { key: 'minuteQuantity', label: 'Minutos', render: (fila) => fila.invoice.minuteQuantity, ordenable: true },
     { key: 'createdBy', label: 'Creado por' },
     {
       key: 'syncStatuses',
@@ -159,7 +170,7 @@ const Facturas = () => {
             onCambiarPagina={(pagina) => cargar(pagina, porPagina, filtros)}
             onCambiarPorPagina={(nuevoSize) => { setPorPagina(nuevoSize) }}
           />
-          <Table columnas={columnas} datos={datos} />
+          <Table columnas={columnas} datos={datos} ordenamiento={ordenamiento} onOrdenar={handleOrdenar} />
         </>
       )}
 
