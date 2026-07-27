@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { temas } from '../../styles/temas'
-import { getUsosEstacionamiento } from '../../services/parkingUsageService'
+import { getUsosEstacionamiento, getParkingsFiltroUso } from '../../services/parkingUsageService'
 import { USAGE_STATUS_OPTIONS, labelFromKey } from '../../services/diccionarioDatos'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
@@ -14,6 +14,7 @@ const FILTROS_VACIOS = {
   parkingTicketNumber: '',
   plate: '',
   status: '',
+  parkingId: '',
   from: '',
   to: '',
 }
@@ -37,6 +38,7 @@ const Usos = () => {
   const [errorMensaje, setErrorMensaje] = useState(null)
   const [filtros, setFiltros] = useState(FILTROS_VACIOS)
   const [ordenamiento, setOrdenamiento] = useState(null)
+  const [parkings, setParkings] = useState([])
 
   const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros, ordenamientoActual = ordenamiento) => {
     setCargando(true)
@@ -46,6 +48,7 @@ const Usos = () => {
         parkingTicketNumber: filtrosActuales.parkingTicketNumber,
         plate: filtrosActuales.plate,
         status: filtrosActuales.status,
+        parkingId: filtrosActuales.parkingId,
         from: aInstanteUtc(filtrosActuales.from),
         to: aInstanteUtc(filtrosActuales.to),
         sort: ordenamientoActual ? `${ordenamientoActual.campo},${ordenamientoActual.direccion}` : undefined,
@@ -65,9 +68,22 @@ const Usos = () => {
     }
   }
 
+  const cargarParkings = async () => {
+    try {
+      const { data } = await getParkingsFiltroUso()
+      setParkings(data)
+    } catch (error) {
+      console.error(error.response?.data)
+    }
+  }
+
   useEffect(() => {
     cargar(0, porPagina)
   }, [porPagina])
+
+  useEffect(() => {
+    cargarParkings()
+  }, [])
 
   const handleFiltroChange = (e) => {
     const { name, value } = e.target
@@ -129,6 +145,24 @@ const Usos = () => {
           opcionesQuemadas={USAGE_STATUS_OPTIONS}
           placeHolder="Todos"
         />
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-gray-600">Parqueadero</label>
+          <select
+            name="parkingId"
+            value={filtros.parkingId}
+            onChange={handleFiltroChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-gray-50
+             focus:outline-none focus:ring-2 focus:ring-blue-900 min-h-[42px]
+             disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+          >
+            <option value="">Todos</option>
+            {parkings.map((parking) => (
+              <option key={parking.id} value={parking.id}>
+                {parking.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <Input
           label="Desde"
           type="datetime-local"

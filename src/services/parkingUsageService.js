@@ -14,3 +14,8 @@ export const getUsosEstacionamiento = (page = 0, size = 20, filtros = {}) => {
     });
     return api.get("/v1/parking/usage", { params });
 }
+
+//consultar los parqueaderos activos (id, name) para poblar el filtro de parqueadero
+export const getParkingsFiltroUso = () => {
+    return api.get("/v1/parking/usage/parkings");
+}
