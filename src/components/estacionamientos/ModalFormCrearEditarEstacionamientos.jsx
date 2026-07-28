@@ -8,6 +8,8 @@ import DiccionarioDatosSelect from '../ui/DiccionarioDatosSelect';
 import { FALLBACKS, getParkingTypes } from '../../services/diccionarioDatos';
 
 const EMPTY = {
+    externalParkingId: "",
+    garitaCode: "",
     name: "",
     address: "",
     city: "",
@@ -77,6 +79,9 @@ const ModalFormCrearEditarEstacionamientos = ({ parking = null, onClose, onSubmi
                     disabled={cargando} maxLength={20} />
 
                 <Input label="ID externo" type="text" name="externalParkingId" value={form.externalParkingId} onChange={handleChange}
+                    disabled={cargando} />
+
+                <Input label="Código garita" type="text" name="garitaCode" value={form.garitaCode} onChange={handleChange}
                     disabled={cargando} />
 
                 <Input label="Niveles*" type="number" name="totalLevels" value={form.totalLevels} onChange={handleChange}
