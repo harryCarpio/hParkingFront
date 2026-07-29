@@ -110,9 +110,9 @@ const Usos = () => {
   }
 
   const columnas = [
+    { key: 'parkingName', label: 'Estacionamiento' },
     { key: 'parkingTicketNumber', label: 'N° Ticket', ordenable: true },
     { key: 'plate', label: 'Placa', ordenable: true },
-    { key: 'parkingName', label: 'Estacionamiento' },
     { key: 'entryTime', label: 'Entrada', render: (fila) => formatearFecha(fila.entryTime), ordenable: true },
     { key: 'exitTime', label: 'Salida', render: (fila) => formatearFecha(fila.exitTime), ordenable: true },
     { key: 'status', label: 'Estado', render: (fila) => labelFromKey(USAGE_STATUS_OPTIONS, fila.status), ordenable: true },
@@ -125,26 +125,6 @@ const Usos = () => {
       </h1>
 
       <form onSubmit={handleBuscar} className="flex items-end gap-4 flex-wrap">
-        <Input
-          label="N° Ticket"
-          name="parkingTicketNumber"
-          value={filtros.parkingTicketNumber}
-          onChange={handleFiltroChange}
-        />
-        <Input
-          label="Placa"
-          name="plate"
-          value={filtros.plate}
-          onChange={handleFiltroChange}
-        />
-        <DiccionarioDatosSelect
-          label="Estado"
-          name="status"
-          value={filtros.status}
-          onChange={handleFiltroChange}
-          opcionesQuemadas={USAGE_STATUS_OPTIONS}
-          placeHolder="Todos"
-        />
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-600">Parqueadero</label>
           <select
@@ -164,6 +144,18 @@ const Usos = () => {
           </select>
         </div>
         <Input
+          label="N° Ticket"
+          name="parkingTicketNumber"
+          value={filtros.parkingTicketNumber}
+          onChange={handleFiltroChange}
+        />
+        <Input
+          label="Placa"
+          name="plate"
+          value={filtros.plate}
+          onChange={handleFiltroChange}
+        />
+        <Input
           label="Desde"
           type="datetime-local"
           name="from"
@@ -178,6 +170,14 @@ const Usos = () => {
           value={filtros.to}
           onChange={handleFiltroChange}
           min={filtros.from || undefined}
+        />
+        <DiccionarioDatosSelect
+          label="Estado"
+          name="status"
+          value={filtros.status}
+          onChange={handleFiltroChange}
+          opcionesQuemadas={USAGE_STATUS_OPTIONS}
+          placeHolder="Todos"
         />
 
         <Button
