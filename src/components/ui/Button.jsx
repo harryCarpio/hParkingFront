@@ -6,6 +6,8 @@ const Button = ({ texto, type = "button", onClick, disabled, cargando, variante 
       danger: "bg-red-600 hover:bg-red-700 text-white",
       //variante fija (no reacciona al tema seleccionado), para pantallas como Login que siempre usan Slate
       slate: "bg-slate-700 hover:bg-slate-800 text-white",
+      //variante fija (no reacciona al tema seleccionado), para pantallas como Login que siempre usan Emerald
+      emerald: "bg-emerald-700 hover:bg-emerald-800 text-white",
   }
 
   const tamanios = {
