@@ -24,6 +24,14 @@ const formatearFecha = (iso) => (
   iso ? new Date(iso).toLocaleString() : '—'
 )
 
+//orden fijo de despliegue de los sistemas externos, sin importar el orden en que llegan del backend
+const ORDEN_SISTEMAS_EXTERNOS = ['SPARK', 'EMOV']
+const ordenarSyncStatuses = (syncStatuses) => (
+  [...syncStatuses].sort((a, b) => (
+    ORDEN_SISTEMAS_EXTERNOS.indexOf(a.targetSystem) - ORDEN_SISTEMAS_EXTERNOS.indexOf(b.targetSystem)
+  ))
+)
+
 const Facturas = () => {
   const [datos, setDatos] = useState([])
   const [paginaActual, setPaginaActual] = useState(0)
@@ -101,7 +109,7 @@ const Facturas = () => {
       label: 'Sincronización',
       render: (fila) => (
         <div className="flex gap-2 flex-wrap">
-          {fila.syncStatuses.map((syncStatus) => (
+          {ordenarSyncStatuses(fila.syncStatuses).map((syncStatus) => (
             <BadgeSyncStatus
               key={syncStatus.id}
               syncStatus={syncStatus}
