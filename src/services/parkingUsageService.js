@@ -19,3 +19,8 @@ export const getUsosEstacionamiento = (page = 0, size = 20, filtros = {}) => {
 export const getParkingsFiltroUso = () => {
     return api.get("/v1/parking/usage/parkings");
 }
+
+//consultar el arbol completo de detalle de un uso: checkouts, servicios, cobros y facturas asociadas
+export const getUsoDetalle = (id) => {
+    return api.get(`/v1/parking/usage/${id}/detail`);
+}

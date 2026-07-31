@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Search, X } from 'lucide-react'
+import { Search, X, Eye } from 'lucide-react'
 import { temas } from '../../styles/temas'
 import { getUsosEstacionamiento, getParkingsFiltroUso } from '../../services/parkingUsageService'
 import { USAGE_STATUS_OPTIONS, labelFromKey } from '../../services/diccionarioDatos'
@@ -9,6 +9,7 @@ import DiccionarioDatosSelect from '../../components/ui/DiccionarioDatosSelect'
 import Spinner from '../../components/ui/Spinner'
 import Pagination from '../../components/ui/Pagination'
 import Table from '../../components/ui/Table'
+import PanelDetalleUso from '../../components/usos/PanelDetalleUso'
 
 const FILTROS_VACIOS = {
   parkingTicketNumber: '',
@@ -39,6 +40,7 @@ const Usos = () => {
   const [filtros, setFiltros] = useState(FILTROS_VACIOS)
   const [ordenamiento, setOrdenamiento] = useState(null)
   const [parkings, setParkings] = useState([])
+  const [usoSeleccionadoId, setUsoSeleccionadoId] = useState(null)
 
   const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros, ordenamientoActual = ordenamiento) => {
     setCargando(true)
@@ -116,6 +118,19 @@ const Usos = () => {
     { key: 'entryTime', label: 'Entrada', render: (fila) => formatearFecha(fila.entryTime), ordenable: true },
     { key: 'exitTime', label: 'Salida', render: (fila) => formatearFecha(fila.exitTime), ordenable: true },
     { key: 'status', label: 'Estado', render: (fila) => labelFromKey(USAGE_STATUS_OPTIONS, fila.status), ordenable: true },
+    {
+      key: 'acciones',
+      label: 'Acciones',
+      render: (fila) => (
+        <button
+          title="Ver detalle"
+          className={`${temas.tabla.acciones.base} ${temas.tabla.acciones.ver}`}
+          onClick={() => setUsoSeleccionadoId(fila.id)}
+        >
+          <Eye size={16} />
+        </button>
+      ),
+    },
   ]
 
   return (
@@ -215,6 +230,13 @@ const Usos = () => {
           />
           <Table columnas={columnas} datos={datos} ordenamiento={ordenamiento} onOrdenar={handleOrdenar} />
         </>
+      )}
+
+      {usoSeleccionadoId && (
+        <PanelDetalleUso
+          parkingUsageId={usoSeleccionadoId}
+          onClose={() => setUsoSeleccionadoId(null)}
+        />
       )}
     </div>
   )
