@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ChevronDown, Car } from 'lucide-react'
+import { ChevronDown, Car, Ban } from 'lucide-react'
 import EstadoPill from '../ui/EstadoPill'
 import BotonCopiar from '../ui/BotonCopiar'
 import TarjetaCobro from './TarjetaCobro'
@@ -11,7 +11,8 @@ const TarjetaCheckout = ({ checkout, abiertoInicial = false }) => {
     const [abierto, setAbierto] = useState(abiertoInicial)
 
     return (
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        <div className={`rounded-xl border bg-white shadow-sm overflow-hidden
+            ${checkout.isTransactionCanceled ? 'border-red-200' : 'border-gray-200'}`}>
             <button
                 type="button"
                 onClick={() => setAbierto((prev) => !prev)}
@@ -28,6 +29,11 @@ const TarjetaCheckout = ({ checkout, abiertoInicial = false }) => {
                     </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                    {checkout.isTransactionCanceled && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-red-50 text-red-700 font-semibold whitespace-nowrap">
+                            <Ban size={12} /> Cancelado
+                        </span>
+                    )}
                     {checkout.grace && (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold whitespace-nowrap">
                             Cortesía {checkout.graceMinutes}min
@@ -40,6 +46,12 @@ const TarjetaCheckout = ({ checkout, abiertoInicial = false }) => {
 
             {abierto && (
                 <div className="px-4 pb-4 flex flex-col gap-3 border-t border-gray-100 pt-3">
+                    {checkout.isTransactionCanceled && (
+                        <p className="text-xs text-red-700 bg-red-50 rounded-md px-3 py-2">
+                            Transacción cancelada{checkout.transactionCanceledAt && <> el {formatearFecha(checkout.transactionCanceledAt)}</>}
+                        </p>
+                    )}
+
                     <div className="flex items-center justify-between text-xs text-gray-400 flex-wrap gap-1">
                         <span className="flex items-center gap-1 font-mono truncate">
                             tx: {checkout.tx}
