@@ -1,23 +1,28 @@
 import api from "../utils/axiosInstance";
+import { obtenerDeviceIdentifier, obtenerInfoDispositivo, obtenerIpPublica } from "../utils/deviceInfo";
+import { APP_VERSION } from "../utils/buildInfo";
 
 
-export const iniciarSesion = (email, password) => {
+export const iniciarSesion = async (email, password) => {
+  const { deviceName, model, osName, osVersion } = obtenerInfoDispositivo();
+  const ipAddress = await obtenerIpPublica();
+
   const body = {
       email,
       password,
-      deviceIdentifier: "web-admin",
+      deviceIdentifier: obtenerDeviceIdentifier(),
       deviceFingerprint: navigator.userAgent,
-      deviceName: "Navegador Web",
-      model: "Browser",
-      osName: navigator.platform,
-      osVersion: "N/A",
-      appVersion: "1.0.0",
+      deviceName,
+      model,
+      osName,
+      osVersion,
+      appVersion: APP_VERSION,
       manufacturer: "Web",
       deviceType: "WEB",
-      ipAddress: "0.0.0.0",
+      ipAddress,
       userAgent: navigator.userAgent,
   };
-  
+
   return api.post("/auth/login", body);
 }
 

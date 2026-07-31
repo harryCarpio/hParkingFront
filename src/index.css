@@ -529,3 +529,14 @@
 .accent-celestevr:hover {
     accent-color: var(--color-accent-dark);
 }
+
+/* barra de progreso del carrusel de fondo del login (BackgroundCarousel.jsx) */
+@keyframes progreso-carrusel {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+.animate-progreso-carrusel {
+    animation-name: progreso-carrusel;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
