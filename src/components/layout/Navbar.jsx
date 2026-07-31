@@ -36,7 +36,12 @@ const Navbar = ({ onMenuClick }) => {
                 >
                     <Menu size={22} />
                 </button>
-                <span className="text-xl font-bold tracking-wide">hParking</span>
+                <div className="flex items-center gap-2">
+                    <div className="bg-white rounded-lg p-1 flex items-center justify-center shadow-sm shrink-0">
+                        <img src="/logo.svg" alt="" className="w-6 h-6" />
+                    </div>
+                    <span className="text-xl font-bold tracking-wide">hParking</span>
+                </div>
 
             </div>
 
