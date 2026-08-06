@@ -33,6 +33,19 @@ export default defineConfig({
         secure: true,
         headers: {
           Origin: 'http://192.168.100.250:8080'
+        },
+        //evita que un fallo de conexion hacia el backend (ej. certificado TLS vencido, backend caido)
+        //tumbe el dev server; en vez de eso responde un error con el mismo shape que usa el resto de la app
+        //(ver axiosInstance.js / manejo de error.response?.data?.errors)
+        configure: (proxy) => {
+          proxy.on('error', (err, req, res) => {
+            console.error('[vite] error de proxy hacia el backend:', err.message)
+            if (!res.writeHead || res.headersSent) return
+            res.writeHead(502, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({
+              errors: [{ issue: 'No se pudo conectar con el servidor. Verifica que esté disponible e inténtalo nuevamente.' }]
+            }))
+          })
         }
       }
     }

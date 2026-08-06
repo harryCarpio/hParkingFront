@@ -66,6 +66,11 @@ export const AuthProvider = ({ children }) => {
             if (error.response?.status === 401) {
                 throw new Error("Usuario no registrado, o credenciales inválidas");
             }
+            //el backend esta inalcanzable (ej. certificado TLS vencido, servidor caido, sin red):
+            //error.response llega vacio, o el proxy de vite responde 502 (ver vite.config.js)
+            if (!error.response || error.response.status === 502) {
+                throw new Error("No se pudo conectar con el servidor. Verifica que esté disponible e inténtalo nuevamente.");
+            }
             throw error;
         }
 
