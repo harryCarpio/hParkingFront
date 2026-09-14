@@ -20,6 +20,11 @@ export const getParkingsFiltroUso = () => {
     return api.get("/v1/parking/usage/parkings");
 }
 
+//consultar capacidad/disponibilidad actual de los parqueaderos activos, para los donuts de ocupacion del dashboard
+export const getCapacidadParqueaderos = () => {
+    return api.get("/v1/parking/usage/parkings/capacity");
+}
+
 //consultar el arbol completo de detalle de un uso: checkouts, servicios, cobros y facturas asociadas
 export const getUsoDetalle = (id) => {
     return api.get(`/v1/parking/usage/${id}/detail`);

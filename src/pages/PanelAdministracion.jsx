@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { getBandChartData } from '../services/dashboardService';
+import { getCapacidadParqueaderos } from '../services/parkingUsageService';
 import Spinner from '../components/ui/Spinner';
 import { temas } from '../styles/temas';
 import ParkingAvailabilityChart from '../components/dashboard/ParkingAvailabilityChart';
+import ParkingCapacityDonut from '../components/dashboard/ParkingCapacityDonut';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 
@@ -21,6 +23,8 @@ const PanelAdministracion = () => {
   const [series, setSeries] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  //capacidad/disponibilidad actual por parkingId, solo de parqueaderos habilitados (ver fetchCapacidades)
+  const [capacidadPorParkingId, setCapacidadPorParkingId] = useState({})
 
   const fetchData = () => {
     setLoading(true);
@@ -30,8 +34,23 @@ const PanelAdministracion = () => {
       .catch(() => setError('No se pudo cargar la información del dashboard.'))
       .finally(() => setLoading(false));
   };
+
+  const fetchCapacidades = async () => {
+    try {
+      const { data } = await getCapacidadParqueaderos();
+      const porParkingId = {};
+      data.forEach((parking) => {
+        porParkingId[parking.id] = parking;
+      });
+      setCapacidadPorParkingId(porParkingId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchCapacidades();
   }, [])
 
 
@@ -78,15 +97,26 @@ const PanelAdministracion = () => {
       )}
 
       {!loading && !error && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {series.map((parking) => (
-            <ParkingAvailabilityChart
-              key={parking.parkingId}
-              parkingName={parking.parkingName}
-              totalCapacity={parking.totalCapacity}
-              points={parking.points}
-            />
-          ))}
+        <div className="flex flex-col gap-4">
+          {series.map((parking) => {
+            const capacidad = capacidadPorParkingId[parking.parkingId];
+            return (
+              <div key={parking.parkingId} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <ParkingAvailabilityChart
+                  parkingName={parking.parkingName}
+                  totalCapacity={parking.totalCapacity}
+                  points={parking.points}
+                />
+                {capacidad && (
+                  <ParkingCapacityDonut
+                    parkingName={parking.parkingName}
+                    totalCapacity={capacidad.totalCapacity}
+                    availableCount={capacidad.availableCount}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       )
 
