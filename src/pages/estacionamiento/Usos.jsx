@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Search, X, Eye } from 'lucide-react'
+import { DollarSign, Search, X, Eye } from 'lucide-react'
 import { temas } from '../../styles/temas'
 import { getUsosEstacionamiento, getParkingsFiltroUso } from '../../services/parkingUsageService'
 import { USAGE_STATUS_OPTIONS, labelFromKey } from '../../services/diccionarioDatos'
@@ -10,6 +10,7 @@ import Spinner from '../../components/ui/Spinner'
 import Pagination from '../../components/ui/Pagination'
 import Table from '../../components/ui/Table'
 import PanelDetalleUso from '../../components/usos/PanelDetalleUso'
+import CheckoutPagoModal from '../../components/usos/CheckoutPagoModal'
 
 const FILTROS_VACIOS = {
   parkingTicketNumber: '',
@@ -41,6 +42,7 @@ const Usos = () => {
   const [ordenamiento, setOrdenamiento] = useState(null)
   const [parkings, setParkings] = useState([])
   const [usoSeleccionadoId, setUsoSeleccionadoId] = useState(null)
+  const [placaCobro, setPlacaCobro] = useState(null)
 
   const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros, ordenamientoActual = ordenamiento) => {
     setCargando(true)
@@ -102,6 +104,11 @@ const Usos = () => {
     cargar(0, porPagina, FILTROS_VACIOS)
   }
 
+  const handlePagoCompletado = () => {
+    setPlacaCobro(null)
+    cargar(paginaActual, porPagina, filtros, ordenamiento)
+  }
+
   const handleOrdenar = (campo) => {
     const nuevoOrdenamiento = {
       campo,
@@ -122,13 +129,24 @@ const Usos = () => {
       key: 'acciones',
       label: 'Acciones',
       render: (fila) => (
-        <button
-          title="Ver detalle"
-          className={`${temas.tabla.acciones.base} ${temas.tabla.acciones.ver}`}
-          onClick={() => setUsoSeleccionadoId(fila.id)}
-        >
-          <Eye size={16} />
-        </button>
+        <div className="flex gap-2">
+          <button
+            title="Ver detalle"
+            className={`${temas.tabla.acciones.base} ${temas.tabla.acciones.ver}`}
+            onClick={() => setUsoSeleccionadoId(fila.id)}
+          >
+            <Eye size={16} />
+          </button>
+          {fila.status === 'ACTIVE' && (
+            <button
+              title="Cobrar"
+              className={`${temas.tabla.acciones.base} ${temas.tabla.acciones.cobrar}`}
+              onClick={() => setPlacaCobro(fila.plate)}
+            >
+              <DollarSign size={16} />
+            </button>
+          )}
+        </div>
       ),
     },
   ]
@@ -236,6 +254,14 @@ const Usos = () => {
         <PanelDetalleUso
           parkingUsageId={usoSeleccionadoId}
           onClose={() => setUsoSeleccionadoId(null)}
+        />
+      )}
+
+      {placaCobro && (
+        <CheckoutPagoModal
+          plate={placaCobro}
+          onClose={() => setPlacaCobro(null)}
+          onCompletado={handlePagoCompletado}
         />
       )}
     </div>

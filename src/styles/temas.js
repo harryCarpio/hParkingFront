@@ -44,7 +44,8 @@ export const temas = {
             hover:scale-105 active:scale-95`,
             ver: ` bg-blue-50 text-slate-700 hover:bg-blue-100`,
             editar: ` bg-green-50 text-slate-700 hover:bg-green-100`,
-            eliminar: ` bg-red-50 text-slate-700   hover:bg-red-100`
+            eliminar: ` bg-red-50 text-slate-700   hover:bg-red-100`,
+            cobrar: ` bg-emerald-50 text-slate-700 hover:bg-emerald-100`
         }
     },
 

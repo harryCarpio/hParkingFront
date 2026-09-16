@@ -1,16 +1,15 @@
 import axios from "axios"
 
 
-/*
 const api = axios.create({ //Produccion
     baseURL: window.__APP_CONFIG__?.API_URL || import.meta.env.VITE_HPARKING_API_URL
 });
-*/
 
+/*
 const api = axios.create({ //Desarrollo:
     baseURL: '/api'
 });
-
+*/
 
 //se guarda el token en memoria
 let tokenMemoria = null;
