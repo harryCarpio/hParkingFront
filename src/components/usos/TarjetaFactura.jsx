@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { FileText } from 'lucide-react'
 import BadgeSyncStatus from '../facturas/BadgeSyncStatus'
 import ModalDetalleSincronizacion from '../facturas/ModalDetalleSincronizacion'
-import BotonCopiar from '../ui/BotonCopiar'
 import { formatearFecha, formatearMoneda } from './usoDetalleUtils'
 
 //orden fijo de despliegue de los sistemas externos, sin importar el orden en que llegan del backend
@@ -43,15 +42,10 @@ const TarjetaFactura = ({ factura }) => {
                 <span className="col-span-2 truncate"><strong>Email:</strong> {invoice.billingEmail || '—'}</span>
                 <span><strong>Placa:</strong> {invoice.plate}</span>
                 <span><strong>Minutos:</strong> {invoice.minuteQuantity}</span>
-                <span className="col-span-2"><strong>Parqueadero:</strong> {invoice.parkingName} ({invoice.externalParkingId})</span>
+                <span className="col-span-2"><strong>Parqueadero:</strong> {invoice.parkingName}</span>
                 <span><strong>Método de pago:</strong> {invoice.paymentMethodCode}</span>
                 {invoice.sessionId && <span><strong>Sesión:</strong> {invoice.sessionId}</span>}
                 {invoice.authNumber && <span><strong>N° Autorización:</strong> {invoice.authNumber}</span>}
-                <span className="col-span-2 flex items-center gap-1">
-                    <strong className="shrink-0">Transacción:</strong>
-                    <span className="font-mono truncate">{invoice.transactionId}</span>
-                    <BotonCopiar valor={invoice.transactionId} />
-                </span>
             </div>
 
             {details.length > 0 && (
