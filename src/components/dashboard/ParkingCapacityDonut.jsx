@@ -1,7 +1,7 @@
 import React from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
-const COLOR_DISPONIBLE = 'rgb(32, 114, 185)';
+const COLOR_DISPONIBLE = '#22c55e';
 const COLOR_OCUPADO = '#f87171';
 
 const CustomTooltip = ({ active, payload }) => {

@@ -17,7 +17,7 @@ const CustomTooltip = ({ active, payload, label,totalCapacity }) => {
     return (
         <div className="bg-white border border-gray-200 rounded p-2 text-sm shadow">
             <p className="font-semibold mb-1">{formatHour(label)}</p>
-            <p>Disponible: <span className="text-celestevr font-bold">{formatPercent(availRate)}</span> <span className="text-gray-700 font-semibold">({availSpaces} espacios)</span></p>
+            <p>Disponible: <span className="text-green-500 font-bold">{formatPercent(availRate)}</span> <span className="text-gray-700 font-semibold">({availSpaces} espacios)</span></p>
             <p>Ocupado: <span className="text-red-400 font-bold">{formatPercent(ocupRate)}</span> <span className="text-gray-700 font-semibold">({ocupSpaces} espacios)</span></p>
         </div>
     );
@@ -35,8 +35,8 @@ const ParkingAvailabilityChart = ({ parkingName, totalCapacity, points }) => {
                 <AreaChart data={points} margin={{ top: 5, right: 10, left: 0, bottom: 0 }}>
                     <defs>
                         <linearGradient id={`gradDisp-${parkingName}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="rgb(32, 114, 185)" stopOpacity={0.3} />
-                            <stop offset="95%" stopColor="rgb(32, 114, 185)" stopOpacity={0} />
+                            <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
                         </linearGradient>
                         <linearGradient id={`gradOcup-${parkingName}`} x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#f87171" stopOpacity={0.2} />
@@ -65,7 +65,7 @@ const ParkingAvailabilityChart = ({ parkingName, totalCapacity, points }) => {
                         type="monotone"
                         dataKey="availabilityRate"
                         name="Disponibilidad"
-                        stroke="rgb(32, 114, 185)"
+                        stroke="#22c55e"
                         strokeWidth={2}
                         fill={`url(#gradDisp-${parkingName})`}
                         fillOpacity={0.15}
