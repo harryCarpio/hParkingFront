@@ -7,6 +7,22 @@ description: Best practices for HTTP calls with axios in this project (hParkingF
 
 All backend HTTP calls go through the single shared instance in [src/utils/axiosInstance.js](../../../src/utils/axiosInstance.js), exported as `api`. **Never call `axios` directly from a component, page, or service** — always import and use `api`.
 
+## Base URL — read this before adding a service
+
+`axiosInstance.js` contains two `axios.create(...)` blocks, one active and one commented out. **The runtime-config block is the active one:**
+
+```js
+const api = axios.create({ //Produccion
+    baseURL: window.__APP_CONFIG__?.API_URL || import.meta.env.VITE_HPARKING_API_URL
+});
+```
+
+- `window.__APP_CONFIG__` comes from [public/config.js](../../../public/config.js), loaded by a plain `<script src="/config.js">` in `index.html` before the app bundle. That file **is tracked in git** and currently sets `API_URL` to `https://hparking-api.vrsoluciones.net/api`.
+- **Consequence: `npm run dev` talks to the production API directly**, and the Vite dev proxy is bypassed (nothing requests a relative `/api/*` path). Treat any write you make from a dev server as a write to production data unless you have changed `API_URL` locally. It also means the backend's `ALLOWED_ORIGINS` must include your dev origin or requests fail CORS.
+- The commented-out block (`baseURL: '/api'`) is the proxy mode: switching to it routes calls through the Vite proxy in `vite.config.js` instead. See the Vite skill.
+- **The configured base already ends in `/api`**, so service paths start at the next segment: `/v1/parkings`, `/v1/app-users`, `/auth/login`. Never repeat the `/api` prefix in a service, and never lead with the full host.
+- If you switch the blocks (or edit `public/config.js`) to point at a local/LAN backend while developing, **that is a local-only change — don't commit it**. Check `git diff src/utils/axiosInstance.js public/config.js` before committing.
+
 ## Service-layer pattern
 
 - API calls are grouped by domain into `src/services/<dominio>Service.js` (e.g. `parkingService.js`, `authService.js`, `systemUsersService.js`), each exporting plain named functions that wrap `api.get/post/put/delete` calls and return the axios promise directly (don't `await`/unwrap inside the service — let the calling page `await` it and destructure `{ data }`).
@@ -45,5 +61,5 @@ All backend HTTP calls go through the single shared instance in [src/utils/axios
 ## Things to avoid
 
 - Don't create a second axios instance or bypass the interceptors for "simple" requests — every backend call should get the auth header and refresh handling for free.
-- Don't put `baseURL` overrides per-call; the `/api` prefix + Vite dev proxy (see the Vite skill) is the single source of truth for where requests go.
+- Don't put `baseURL` overrides per-call and don't hardcode a host in a request URL. `window.__APP_CONFIG__.API_URL` (from `public/config.js`, falling back to `VITE_HPARKING_API_URL`) is the single source of truth for where requests go — see "Base URL" above.
 - Don't swallow errors silently — every catch block should at least `console.error` and surface something actionable to the user via existing error-message state, matching the rest of the codebase.

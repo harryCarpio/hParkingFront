@@ -1,9 +1,20 @@
 import React from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
+//bucketStartTs viene en UTC desde el endpoint de band-chart; se formatea forzando timeZone: 'UTC'
+//para mostrar la hora tal cual la reporta el backend, sin que el navegador la desplace a su huso horario local
 const formatHour = (ts) => {
     const date = new Date(ts);
-    return date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', hour12: false });
+    return date.toLocaleTimeString('es-EC', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+}
+
+const formatFechaHora = (ts) => {
+    const date = new Date(ts);
+    return date.toLocaleString('es-EC', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: false,
+        timeZone: 'UTC',
+    });
 }
 
 const formatPercent = (value) => `${Math.round(value * 100)}%`;
@@ -16,7 +27,7 @@ const CustomTooltip = ({ active, payload, label,totalCapacity }) => {
   const ocupSpaces = Math.round(ocupRate * totalCapacity);
     return (
         <div className="bg-white border border-gray-200 rounded p-2 text-sm shadow">
-            <p className="font-semibold mb-1">{formatHour(label)}</p>
+            <p className="font-semibold mb-1">{formatFechaHora(label)}</p>
             <p>Disponible: <span className="text-green-500 font-bold">{formatPercent(availRate)}</span> <span className="text-gray-700 font-semibold">({availSpaces} espacios)</span></p>
             <p>Ocupado: <span className="text-red-400 font-bold">{formatPercent(ocupRate)}</span> <span className="text-gray-700 font-semibold">({ocupSpaces} espacios)</span></p>
         </div>
