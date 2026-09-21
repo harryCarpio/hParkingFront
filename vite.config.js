@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
+import process from 'node:process'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -7,7 +8,10 @@ import tailwindcss from '@tailwindcss/vite'
 const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
 //hash corto del commit actual, usado como identificador de la compilacion en el footer del login
+//dentro de Docker no hay .git (ver .dockerignore), asi que el Dockerfile lo pasa
+//como VITE_BUILD_COMMIT; en local se sigue sacando de git igual que antes
 const commitHash = (() => {
+  if (process.env.VITE_BUILD_COMMIT) return process.env.VITE_BUILD_COMMIT
   try {
     return execSync('git rev-parse --short HEAD').toString().trim()
   } catch {
