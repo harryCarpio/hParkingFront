@@ -21,83 +21,84 @@ npm install
 npm run dev
 ```
 
-## Deploy en producción (Docker)
+## Deploy en producción (Nginx)
+###  Antes de hacer el build para producción
 
-El panel se despliega como un contenedor: una imagen que compila la SPA y la
-sirve con nginx, que ademas hace de proxy de `/api/` hacia el backend. Todo lo
-necesario esta en el repositorio (`Dockerfile`, `nginx/default.conf`,
-`docker-compose.yml`), asi que la compilacion es reproducible y no hay que
-editar codigo ni subir archivos a mano antes de publicar.
+En el archivo `src/utils/axiosInstance.js`, debe **comentar** la línea de desarrollo y **descomentar** la de producción:
 
-```bash
-docker compose up -d --build
+```javascript
+//  Producción — descomentar esto:
+const api = axios.create({
+    baseURL: window.__APP_CONFIG__?.API_URL || import.meta.env.VITE_HPARKING_API_URL
+});
+
+//  Desarrollo — comentar esto:
+/*
+const api = axios.create({
+    baseURL: '/api'
+});
+*/
 ```
 
-### Como funciona
+> Sin este cambio antes del build, el proyecto en producción intentará
+> conectarse a `/api` y no encontrará el backend — dará errores de CORS o 404.
 
-- **`API_URL` ya no se compila dentro del bundle.** El contenedor genera
-  `/config.js` en cada arranque (`nginx/20-config-js.sh`) a partir de la
-  variable de entorno `API_URL`, cuyo valor por defecto es `/api`. Eso significa
-  mismo origen: el navegador pide a `/api/...`, nginx lo reenvia al backend y no
-  hay CORS. Ya **no** hay que acordarse de "no sobreescribir el config.js del
-  servidor": ese archivo se regenera solo.
-- **El upstream es `hparking-app:8080`**, el nombre del contenedor del backend en
-  la red `hparking_default`. Nunca `127.0.0.1` ni `host.docker.internal`: dentro
-  de un contenedor ambos apuntan al propio contenedor. Ese fue justamente el
-  origen del 504 del 2026-09-21 (ver
-  `backend/hParkingServer/docs/gateway-502-504-filebeat-incident.md`).
-- **La red `hparking_default` es externa**: la crea el compose de
-  `hParkingServer`, asi que ese stack debe estar levantado primero.
-- **El puerto se publica solo en `127.0.0.1:8000`.** Quien atiende desde fuera es
-  nginx-proxy-manager, que llega por la red de Docker. Las reglas de iptables de
-  Docker se saltan ufw, asi que publicar en `0.0.0.0` expondria el panel a
-  Internet aunque el firewall parezca cerrado.
-- **El contenedor se llama `hparking-nginx`** porque es el destino configurado en
-  nginx-proxy-manager para `hparking-web.fixwireless.net`. Si se renombra, hay
-  que actualizar ese proxy host o el sitio dara 502.
-
-### Apuntar a otro backend
-
-Solo si el panel debe hablar con un backend que no esta en la misma red:
+Una vez hecho ese cambio, recién se ejecuta:
 
 ```bash
-PANEL_API_URL=https://hparking-api.fixwireless.net/api docker compose up -d
+# 1. Generar el build
+npm run build
 ```
 
-En ese caso el backend debe incluir el origen del panel en `ALLOWED_ORIGINS`.
 
-### Verificar el despliegue
+Esto genera la carpeta `dist/` lista para producción.
 
+>  **Importante:** En el servidor Nginx ya existe un `config.js` con las variables
+> de entorno de producción.  
+> **NO sobreescribir ese archivo** al subir el contenido de `dist/` — si se reemplaza
+> obtendrá errores de CORS y el proyecto no funcionará correctamente.
+
+### DESPLEGAR O ACTUALIZAR VERSION SERVIDOR:
+Ingresar al servidor por sftp y en la ruta. 
 ```bash
-curl -s http://127.0.0.1:8000/config.js                    # API_URL en uso
-curl -s -o /dev/null -w '%{http_code}
-' http://127.0.0.1:8000/
-docker compose logs --tail=20 panel
+sftp://parking@148.72.168.213:222/home/parking/ngix/bin
+```
+Copiar el contenido que se encuentra dentro de lo carpeta que se creo localmente al ejecutar npm run build. 
+Esta carpeta tiene los siguientes archivos:
+- carpeta assets
+- index.html
+- config.js
+- vite.svg
+
+Se debe copiar la carpeta assets, index.html,  y viste.svg no copiar config.js ya que la que esta en el servidor ya esta con el proxy inverso que se configuro en nginx para conectar al back, en tal caso de reescribirse config.js para el servidor debe tener lo siguiente:
+```js
+window.__APP_CONFIG__={
+    API_URL: "/api"
+}
 ```
 
-Y desde fuera, con el script del backend:
-
-```bash
-./check-services.sh public
-```
-
-### Desarrollo local
-
-`npm run dev` no usa Docker: Vite levanta su propio proxy de `/api` hacia el
-backend (ver `server.proxy` en `vite.config.js`). Para apuntar a otro backend en
-desarrollo, cree un `.env` en la raiz (esta en `.gitignore`):
-
+gitignore se ignora el archivo `.env` por seguridad pero este `.env` debe crear en la raiz del proyecto con esta información:
 ```sh
-VITE_HPARKING_API_URL=https://hparking-api.fixwireless.net
+VITE_HPARKING_API_URL = https://hparking-api.vrsoluciones.net solo para desarrollo
 ```
 
-### Despliegue manual por sftp (obsoleto)
+y a su vez en la carpeta public el config.js para desarrollo tiene esto:
+```js
+window.__APP_CONFIG__={
+    API_URL: "https://hparking-api.vrsoluciones.net/api"
+}
+```
+Que basicamente al compilar para subir al servidor se copia este archivo en la carpeta `/dist`
+sin embargo, no se debe sobreescribir el `config.js` que ya existe en el servidor porq ese esta con el `proxy pass`
 
-Hasta 2026-09-21 el panel se publicaba copiando el contenido de `dist/` por sftp
-a `/home/parking/ngix/bin` y ejecutando `nginx/restart.sh` en el servidor, con la
-configuracion de nginx viviendo solo en esa carpeta del servidor, fuera de git.
-Ese procedimiento queda reemplazado por `docker compose up -d --build`. La
-carpeta `ngix` del servidor puede retirarse una vez validado el nuevo contenedor.
+Una vez que se haya copiado en la carpeta del servidor de `nginx/bin` en el terminal ejecutar lo siguiente para actualizar el docker:
+```sh
+# Ingresar a la carpeta nginx
+cd nginx
+# luego dentro de esa carpeta ejecutar el script restart.sh
+./restart.sh
+#este script tiene lo suficiente para actualizar el docker. y ya esta listo los cambiso publicado en el servidor
+```
 
 ## Versión de Node.js
 
