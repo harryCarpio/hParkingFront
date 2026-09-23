@@ -14,6 +14,7 @@ import ListadoUsuariosSistema from "./pages/usuariosSistema/ListadoUsuariosSiste
 import ListadoPruebasApi from "./pages/pruebasApi/ListadoPruebasApi"
 import Usos from "./pages/estacionamiento/Usos"
 import Facturas from "./pages/estacionamiento/Facturas"
+import Indicadores from "./pages/indicadores/Indicadores"
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
               </ProtectedRoute>
             }>
               <Route path="/panelAdministracion" element={<PanelAdministracion />} />
+              <Route path="/indicadores" element={<Indicadores />} />
               <Route path="/estacionamiento/usos" element={<Usos />} />
               <Route path="/estacionamiento/facturas" element={<Facturas />} />
               <Route path="/estacionamientos/listado" element={<ListadoEstacionamientos />} />

@@ -4,6 +4,7 @@ import { matchPath } from 'react-router-dom'
 //que se deben mostrar para esa pantalla. Las migas sin "path" no son clickeables.
 const breadcrumbRoutes = [
     { path: '/panelAdministracion', crumbs: [{ label: 'Inicio' }] },
+    { path: '/indicadores', crumbs: [{ label: 'Indicadores' }] },
     { path: '/estacionamiento/usos', crumbs: [{ label: 'Estacionamiento' }, { label: 'Usos' }] },
     { path: '/estacionamiento/facturas', crumbs: [{ label: 'Estacionamiento' }, { label: 'Facturas' }] },
     { path: '/estacionamientos/listado', crumbs: [{ label: 'Configuraciones' }, { label: 'Estacionamientos' }] },

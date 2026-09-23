@@ -1,4 +1,4 @@
-import { FlaskConical, Home, ParkingSquare, Settings } from 'lucide-react'
+import { ChartColumnBig, FlaskConical, Home, ParkingSquare, Settings } from 'lucide-react'
 import React from 'react'
 
 const menuItems = [
@@ -7,6 +7,13 @@ const menuItems = [
         label: 'Inicio',
         icon: <Home size={22} />,
         path: '/panelAdministracion',
+        children: [],
+    },
+    {
+        id: 'indicadores',
+        label: 'Indicadores',
+        icon: <ChartColumnBig size={22} />,
+        path: '/indicadores',
         children: [],
     },
     {
