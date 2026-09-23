@@ -6,7 +6,7 @@ import TarjetaFactura from './TarjetaFactura'
 import { formatearFecha, formatearMoneda } from './usoDetalleUtils'
 
 //tarjeta de un cobro (AtmCharge): monto recibido/vuelto, estado del pago, y la factura asociada si charged = true
-const TarjetaCobro = ({ cobro }) => (
+const TarjetaCobro = ({ cobro, onSincronizado }) => (
     <div className="rounded-lg border border-gray-200 bg-white p-3 flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2 flex-wrap">
             <div className="flex items-center gap-2 min-w-0">
@@ -30,7 +30,7 @@ const TarjetaCobro = ({ cobro }) => (
         </div>
 
         {cobro.invoice ? (
-            <TarjetaFactura factura={cobro.invoice} />
+            <TarjetaFactura factura={cobro.invoice} onSincronizado={onSincronizado} />
         ) : (
             <p className="text-xs text-gray-400 italic bg-gray-50 rounded-md px-3 py-2 text-center">
                 Sin factura asociada

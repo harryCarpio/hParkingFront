@@ -113,7 +113,8 @@ const Facturas = () => {
             <BadgeSyncStatus
               key={syncStatus.id}
               syncStatus={syncStatus}
-              onClick={setSyncStatusSeleccionado}
+              //el modal necesita el transactionId de la factura para poder reintentar la sincronizacion
+              onClick={(sync) => setSyncStatusSeleccionado({ sync, transactionId: fila.invoice.transactionId })}
             />
           ))}
         </div>
@@ -184,8 +185,10 @@ const Facturas = () => {
 
       {syncStatusSeleccionado && (
         <ModalDetalleSincronizacion
-          syncStatus={syncStatusSeleccionado}
+          syncStatus={syncStatusSeleccionado.sync}
+          transactionId={syncStatusSeleccionado.transactionId}
           onClose={() => setSyncStatusSeleccionado(null)}
+          onSincronizado={() => cargar(paginaActual, porPagina, filtros)}
         />
       )}
     </div>

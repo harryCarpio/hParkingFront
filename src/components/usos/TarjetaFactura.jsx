@@ -14,7 +14,8 @@ const ordenarSyncStatuses = (syncStatuses) => (
 
 //tarjeta de detalle de una factura cobrada (InvoiceDto): datos del cliente, lineas de detalle y estado de sincronizacion
 //se usa tanto colgada de un AtmCharge como en la lista de facturas adicionales por parkingTicketNumber
-const TarjetaFactura = ({ factura }) => {
+//onSincronizado se propaga al modal para recargar el detalle cuando un reintento de sincronizacion tiene exito
+const TarjetaFactura = ({ factura, onSincronizado }) => {
     const [syncSeleccionado, setSyncSeleccionado] = useState(null)
     const { invoice, createdBy, details, syncStatuses } = factura
     const totalFactura = details.reduce((suma, detalle) => suma + detalle.totalWithTaxes, 0)
@@ -86,7 +87,12 @@ const TarjetaFactura = ({ factura }) => {
             </div>
 
             {syncSeleccionado && (
-                <ModalDetalleSincronizacion syncStatus={syncSeleccionado} onClose={() => setSyncSeleccionado(null)} />
+                <ModalDetalleSincronizacion
+                    syncStatus={syncSeleccionado}
+                    transactionId={invoice.transactionId}
+                    onClose={() => setSyncSeleccionado(null)}
+                    onSincronizado={onSincronizado}
+                />
             )}
         </div>
     )

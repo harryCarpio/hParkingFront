@@ -60,7 +60,12 @@ const PanelDetalleUso = ({ parkingUsageId, onClose }) => {
                         {detalle.atmCheckouts.length > 0 ? (
                             <div className="flex flex-col gap-3">
                                 {detalle.atmCheckouts.map((checkout, index) => (
-                                    <TarjetaCheckout key={checkout.id} checkout={checkout} abiertoInicial={index === 0} />
+                                    <TarjetaCheckout
+                                        key={checkout.id}
+                                        checkout={checkout}
+                                        abiertoInicial={index === 0}
+                                        onSincronizado={cargar}
+                                    />
                                 ))}
                             </div>
                         ) : (
@@ -75,7 +80,7 @@ const PanelDetalleUso = ({ parkingUsageId, onClose }) => {
                             </h3>
                             <div className="flex flex-col gap-3">
                                 {detalle.additionalInvoices.map((factura) => (
-                                    <TarjetaFactura key={factura.invoice.id} factura={factura} />
+                                    <TarjetaFactura key={factura.invoice.id} factura={factura} onSincronizado={cargar} />
                                 ))}
                             </div>
                         </div>

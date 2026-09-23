@@ -7,7 +7,7 @@ import { formatearFecha, formatearMoneda } from './usoDetalleUtils'
 
 //tarjeta acordeon de un AtmCheckout: encabezado siempre visible (placa/entrada/estado), cuerpo con
 //servicios y cobros que se expande bajo demanda para no saturar la vista cuando hay varios checkouts
-const TarjetaCheckout = ({ checkout, abiertoInicial = false }) => {
+const TarjetaCheckout = ({ checkout, abiertoInicial = false, onSincronizado }) => {
     const [abierto, setAbierto] = useState(abiertoInicial)
 
     return (
@@ -89,7 +89,7 @@ const TarjetaCheckout = ({ checkout, abiertoInicial = false }) => {
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Cobros</p>
                         {checkout.charges.length > 0 ? (
                             checkout.charges.map((cobro) => (
-                                <TarjetaCobro key={cobro.id} cobro={cobro} />
+                                <TarjetaCobro key={cobro.id} cobro={cobro} onSincronizado={onSincronizado} />
                             ))
                         ) : (
                             <p className="text-xs text-gray-400 italic">Sin cobros registrados</p>
