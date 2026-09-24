@@ -113,6 +113,5 @@ export const formatearHora = (hora) => `${String(hora).padStart(2, '0')}:00`;
 export const ETIQUETA_ESTADO_USO = {
     ACTIVE: 'Activo',
     COMPLETED: 'Completado',
-    CANCELLED: 'Cancelado',
     PAYED: 'Pagado',
 };

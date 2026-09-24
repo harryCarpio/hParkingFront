@@ -98,7 +98,6 @@ export const FALLBACKS = {
 export const USAGE_STATUS_OPTIONS = [
     { key: "ACTIVE", label: "Activo" },
     { key: "COMPLETED", label: "Completado" },
-    { key: "CANCELLED", label: "Cancelado" },
     { key: "PAYED", label: "Pagado" },
 ]
 

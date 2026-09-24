@@ -215,11 +215,6 @@
         },
         {
             "order": 2,
-            "key": "CANCELLED",
-            "label": "Cancelada"
-        },
-        {
-            "order": 3,
             "key": "PAYED",
             "label": "Pagado"
         }
