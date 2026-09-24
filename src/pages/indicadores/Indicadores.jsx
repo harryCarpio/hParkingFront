@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Car, CircleDollarSign, Clock, ParkingCircle, Receipt } from 'lucide-react'
 import { temas } from '../../styles/temas'
 import { getIndicadores } from '../../services/kpiService'
+import { getParkingsFiltroUso } from '../../services/parkingUsageService'
 import Spinner from '../../components/ui/Spinner'
 import TarjetaKpi from '../../components/kpis/TarjetaKpi'
 import TarjetaGrafico from '../../components/kpis/TarjetaGrafico'
@@ -35,15 +36,18 @@ const Indicadores = () => {
     const [presetActivo, setPresetActivo] = useState(PRESET_POR_DEFECTO.id)
     const [desde, setDesde] = useState(rangoInicial.desde)
     const [hasta, setHasta] = useState(rangoInicial.hasta)
+    //'' = total de todos los parqueaderos
+    const [parkingId, setParkingId] = useState('')
+    const [parkings, setParkings] = useState([])
     const [datos, setDatos] = useState(null)
     const [cargando, setCargando] = useState(false)
     const [errorMensaje, setErrorMensaje] = useState(null)
 
-    const cargar = useCallback(async (desdeActual, hastaActual) => {
+    const cargar = useCallback(async (desdeActual, hastaActual, parkingIdActual) => {
         setCargando(true)
         setErrorMensaje(null)
         try {
-            const { data } = await getIndicadores(desdeActual, hastaActual)
+            const { data } = await getIndicadores(desdeActual, hastaActual, parkingIdActual)
             setDatos(data)
         } catch (error) {
             const errores = error.response?.data?.errors
@@ -62,8 +66,15 @@ const Indicadores = () => {
     //documenta como valido para un efecto; la regla se dispara por el setCargando(true) inicial.
     useEffect(() => {
         //eslint-disable-next-line react-hooks/set-state-in-effect
-        cargar(desde, hasta)
-    }, [cargar, desde, hasta])
+        cargar(desde, hasta, parkingId)
+    }, [cargar, desde, hasta, parkingId])
+
+    //parqueaderos activos para el selector; si falla, el tablero sigue mostrando el total
+    useEffect(() => {
+        getParkingsFiltroUso()
+            .then(({ data }) => setParkings(data))
+            .catch((error) => console.error(error.response?.data))
+    }, [])
 
     const handlePreset = (preset) => {
         const rango = rangoDePreset(preset.dias)
@@ -83,6 +94,11 @@ const Indicadores = () => {
     }
 
     const resumen = datos?.resumen
+    //el nombre sale de la respuesta (datos.parkingId) y no del selector, para que el titulo
+    //no cambie antes de que lleguen las cifras del parqueadero nuevo
+    const parqueaderoFiltrado = datos?.parkingId
+        ? parkings.find((p) => p.id === datos.parkingId)?.name ?? `Parqueadero ${datos.parkingId}`
+        : null
     const ingresosPorParqueadero = (datos?.ingresosPorParqueadero ?? [])
         .map((fila) => ({ etiqueta: fila.etiqueta, valor: Number(fila.monto), facturas: fila.facturas }))
     const usosPorEstado = (datos?.usosPorEstado ?? [])
@@ -98,14 +114,37 @@ const Indicadores = () => {
             </div>
 
             {/* una sola fila de filtros, encima de todo lo que condiciona */}
-            <FiltroRangoFechas
-                presetActivo={presetActivo}
-                desde={desde}
-                hasta={hasta}
-                onPreset={handlePreset}
-                onDesdeChange={handleDesde}
-                onHastaChange={handleHasta}
-            />
+            <div className="flex items-end gap-3 flex-wrap">
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="filtro-parqueadero" className="text-sm font-medium text-gray-600">Parqueadero</label>
+                    <select
+                        id="filtro-parqueadero"
+                        name="parkingId"
+                        value={parkingId}
+                        onChange={(e) => setParkingId(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-gray-50
+                         focus:outline-none focus:ring-2 focus:ring-blue-900 min-h-[42px]
+                         disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                    >
+                        <option value="">Todos (total)</option>
+                        {parkings.map((parking) => (
+                            <option key={parking.id} value={parking.id}>
+                                {parking.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="border-l border-gray-200 pl-3">
+                    <FiltroRangoFechas
+                        presetActivo={presetActivo}
+                        desde={desde}
+                        hasta={hasta}
+                        onPreset={handlePreset}
+                        onDesdeChange={handleDesde}
+                        onHastaChange={handleHasta}
+                    />
+                </div>
+            </div>
 
             {errorMensaje && <p className={temas.texto.textoErrorFormulario}>{errorMensaje}</p>}
 
@@ -117,7 +156,9 @@ const Indicadores = () => {
 
                     {/* cifra principal: la unica de la vista */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-5 py-4">
-                        <p className="text-xs text-gray-500">Ingresos facturados en el período</p>
+                        <p className="text-xs text-gray-500">
+                            Ingresos facturados en el período · {parqueaderoFiltrado ?? 'Todos los parqueaderos'}
+                        </p>
                         <p className="text-5xl font-semibold text-slate-800 leading-tight mt-1">
                             {formatearMoneda(resumen?.ingresosTotales)}
                         </p>
@@ -173,34 +214,36 @@ const Indicadores = () => {
                             : <GraficoIngresosPorDia puntos={datos.ingresosPorDia} />}
                     </TarjetaGrafico>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <TarjetaGrafico
-                            titulo="Ingresos por parqueadero"
-                            subtitulo="Ordenado de mayor a menor recaudación"
-                            columnas={[
-                                { clave: 'etiqueta', titulo: 'Parqueadero' },
-                                { clave: 'valor', titulo: 'Ingresos', alinear: 'derecha', formato: (f) => formatearMoneda(f.valor) },
-                                { clave: 'facturas', titulo: 'Facturas', alinear: 'derecha', formato: (f) => formatearEntero(f.facturas) },
-                            ]}
-                            filas={ingresosPorParqueadero}
-                        >
-                            {ingresosPorParqueadero.length === 0
-                                ? <p className="text-sm text-gray-400 italic py-10 text-center">Sin datos en el rango seleccionado</p>
-                                : (
-                                    <GraficoBarrasCategorias
-                                        datos={ingresosPorParqueadero}
-                                        formatoValor={formatearMonedaCompacta}
-                                        resaltarPrimera
-                                        renderTooltip={(fila) => (
-                                            <>
-                                                <p className="text-sm font-semibold text-slate-800 tabular-nums">{formatearMoneda(fila.valor)}</p>
-                                                <p className="text-gray-500 mt-0.5">{fila.etiqueta}</p>
-                                                <p className="text-gray-400">{formatearEntero(fila.facturas)} facturas</p>
-                                            </>
-                                        )}
-                                    />
-                                )}
-                        </TarjetaGrafico>
+                    <div className={`grid grid-cols-1 gap-4 ${parqueaderoFiltrado ? '' : 'lg:grid-cols-2'}`}>
+                        {!parqueaderoFiltrado && (
+                            <TarjetaGrafico
+                                titulo="Ingresos por parqueadero"
+                                subtitulo="Ordenado de mayor a menor recaudación"
+                                columnas={[
+                                    { clave: 'etiqueta', titulo: 'Parqueadero' },
+                                    { clave: 'valor', titulo: 'Ingresos', alinear: 'derecha', formato: (f) => formatearMoneda(f.valor) },
+                                    { clave: 'facturas', titulo: 'Facturas', alinear: 'derecha', formato: (f) => formatearEntero(f.facturas) },
+                                ]}
+                                filas={ingresosPorParqueadero}
+                            >
+                                {ingresosPorParqueadero.length === 0
+                                    ? <p className="text-sm text-gray-400 italic py-10 text-center">Sin datos en el rango seleccionado</p>
+                                    : (
+                                        <GraficoBarrasCategorias
+                                            datos={ingresosPorParqueadero}
+                                            formatoValor={formatearMonedaCompacta}
+                                            resaltarPrimera
+                                            renderTooltip={(fila) => (
+                                                <>
+                                                    <p className="text-sm font-semibold text-slate-800 tabular-nums">{formatearMoneda(fila.valor)}</p>
+                                                    <p className="text-gray-500 mt-0.5">{fila.etiqueta}</p>
+                                                    <p className="text-gray-400">{formatearEntero(fila.facturas)} facturas</p>
+                                                </>
+                                            )}
+                                        />
+                                    )}
+                            </TarjetaGrafico>
+                        )}
 
                         <TarjetaGrafico
                             titulo="Usos de estacionamiento por estado"
