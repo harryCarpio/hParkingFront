@@ -8,10 +8,10 @@ import { PRESETS, aFechaIso } from './rangosFecha'
  * un calendario para pedir "ultimos 30 dias") y el rango a medida detras de una divisoria.
  * Todo el tablero se recalcula contra la misma porcion, asi que las cifras siempre concuerdan.
  */
-const FiltroRangoFechas = ({ presetActivo, desde, hasta, onPreset, onDesdeChange, onHastaChange }) => (
+const FiltroRangoFechas = ({ presetActivo, desde, hasta, onPreset, onDesdeChange, onHastaChange, presets = PRESETS }) => (
     <div className="flex items-end gap-3 flex-wrap">
         <div className="flex items-center gap-1.5 flex-wrap">
-            {PRESETS.map((preset) => {
+            {presets.map((preset) => {
                 const activo = presetActivo === preset.id
                 return (
                     <button

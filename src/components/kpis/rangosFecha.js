@@ -12,7 +12,11 @@ export const PRESETS = [
 /** Preset inicial del tablero: 30 días da contexto suficiente sin castigar la consulta. */
 export const PRESET_POR_DEFECTO = PRESETS[2]
 
-export const aFechaIso = (fecha) => fecha.toISOString().split('T')[0]
+/**
+ * yyyy-MM-dd del dia calendario de Ecuador. toISOString() daba el dia UTC, que desde las 19:00
+ * locales ya es "maniana" y dejaba los presets corridos un dia.
+ */
+export const aFechaIso = (fecha) => fecha.toLocaleDateString('en-CA', { timeZone: 'America/Guayaquil' })
 
 /** Rango de un preset, en días calendario terminados hoy. */
 export const rangoDePreset = (dias) => {
