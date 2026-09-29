@@ -141,7 +141,7 @@ const Usos = () => {
             <button
               title="Cobrar"
               className={`${temas.tabla.acciones.base} ${temas.tabla.acciones.cobrar}`}
-              onClick={() => setPlacaCobro(fila.plate)}
+              onClick={() => setPlacaCobro(fila.plate || fila.parkingTicketNumber)}
             >
               <DollarSign size={16} />
             </button>
