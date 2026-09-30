@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, CheckCircle2, Pencil, User, X } from 'lucide-react'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import Spinner from '../ui/Spinner'
 import { temas } from '../../styles/temas'
 import {
-    cancelarTransaccionAtm, checkoutAtm, cobrarAtm, crearFacturaOperador, getTiposIdentificacionSri
+    cancelarTransaccionAtm, cancelarTransaccionAtmKeepalive, checkoutAtm, cobrarAtm, crearFacturaOperador, getTiposIdentificacionSri
 } from '../../services/atmService'
 
 const CONSUMIDOR_FINAL = {
@@ -65,18 +65,45 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
     const [vuelto, setVuelto] = useState(0)
     const [exito, setExito] = useState(false)
 
+    //transaccion ATM abierta por el checkout que aun no termino en cobro ni fue cancelada; toda salida del modal
+    //(cerrar, desmontar, cerrar/recargar la pestaña) debe cancelarla en el sistema externo
+    const transaccionPendienteRef = useRef(null)
+    const cobroEnCursoRef = useRef(false)
+    const montadoRef = useRef(true)
+
+    const cancelarTransaccionPendiente = (keepalive = false) => {
+        const pendiente = transaccionPendienteRef.current
+        if (!pendiente) return
+        transaccionPendienteRef.current = null
+        if (keepalive) {
+            cancelarTransaccionAtmKeepalive(pendiente.tx, pendiente.externalParkingId)
+        } else {
+            cancelarTransaccionAtm(pendiente.tx, pendiente.externalParkingId).catch((err) => console.error(err))
+        }
+    }
+
     useEffect(() => {
+        let activo = true
         const cargar = async () => {
             setCargandoCheckout(true)
             setErrorCheckout(null)
             try {
                 const { data } = await checkoutAtm(plate)
+                if (data?.tx) {
+                    transaccionPendienteRef.current = { tx: data.tx, externalParkingId: data.externalParkingId }
+                }
+                //el modal se cerro mientras se calculaba la tarifa: la transaccion recien abierta queda huerfana
+                if (!activo) {
+                    cancelarTransaccionPendiente()
+                    return
+                }
                 setCheckout(data)
             } catch (err) {
+                if (!activo) return
                 const errores = err.response?.data?.errors
                 setErrorCheckout(errores?.length ? errores.map(e => e.issue).join(', ') : (err.response?.data?.detail || 'No se pudo consultar la placa.'))
             } finally {
-                setCargandoCheckout(false)
+                if (activo) setCargandoCheckout(false)
             }
         }
         cargar()
@@ -84,16 +111,35 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
         getTiposIdentificacionSri()
             .then(({ data }) => setTiposIdentificacion(data))
             .catch((err) => console.error(err))
+
+        return () => {
+            activo = false
+            //con un cobro en curso no se cancela aqui: handleFinalizarCobro decide al terminar
+            if (!cobroEnCursoRef.current) cancelarTransaccionPendiente()
+        }
     }, [plate])
 
+    useEffect(() => {
+        montadoRef.current = true
+        //cierre o recarga de la pestaña: fetch keepalive porque la pagina se descarga antes de que axios responda
+        const handleBeforeUnload = () => {
+            if (!cobroEnCursoRef.current) cancelarTransaccionPendiente(true)
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => {
+            montadoRef.current = false
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+        }
+    }, [])
+
     const cerrar = () => {
+        //mientras se registra el cobro no se permite salir: cancelar ahora competiria con el cobro
+        if (procesando) return
         if (exito) {
             onCompletado()
             return
         }
-        if (checkout?.tx) {
-            cancelarTransaccionAtm(checkout.tx, checkout.externalParkingId).catch((err) => console.error(err))
-        }
+        cancelarTransaccionPendiente()
         onClose()
     }
 
@@ -154,6 +200,7 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
         if (vuelto < 0) return
         setProcesando(true)
         setError(null)
+        cobroEnCursoRef.current = true
         try {
             await cobrarAtm({
                 idTransaction: checkout.tx,
@@ -161,11 +208,16 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
                 returnedAmount: vuelto,
                 lines: checkout.services.map((s) => s.id),
             })
+            //cobrada: ya no hay nada que cancelar
+            transaccionPendienteRef.current = null
             setExito(true)
         } catch (err) {
+            //si el modal se desmonto durante el cobro fallido, nadie mas cancelara la transaccion
+            if (!montadoRef.current) cancelarTransaccionPendiente()
             const errores = err.response?.data?.errors
             setError(errores?.length ? errores.map(e => e.issue).join(', ') : (err.response?.data?.detail || 'Error al registrar el pago.'))
         } finally {
+            cobroEnCursoRef.current = false
             setProcesando(false)
         }
     }
