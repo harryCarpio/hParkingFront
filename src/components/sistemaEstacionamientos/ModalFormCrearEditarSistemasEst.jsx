@@ -11,6 +11,7 @@ const EMPTY = {
     supportPhone: "",
     supportName: "",
     status: "ACTIVE",
+    cajeroKey: "",
     authorities: []
 }
 
@@ -26,6 +27,7 @@ const ModalFormCrearEditarSistemasEst = ({sistemaParking = null, onClose, onSubm
    
 
     const isEditing = Boolean(sistemaParking);
+    const cajeroKeyObligatorio = form.providerName?.trim().toUpperCase() === "SPARK";
 
     useEffect(() => {
         if (sistemaParking) {
@@ -73,6 +75,13 @@ const ModalFormCrearEditarSistemasEst = ({sistemaParking = null, onClose, onSubm
             </div>
             <Input label="URL*" type="text" name="url" value={form.url} onChange={handleChange}
                 disabled={cargando} required maxLength={512} />
+            {isEditing && (
+                <Input label={cajeroKeyObligatorio ? "Cajero Key*" : "Cajero Key"} type="text" name="cajeroKey"
+                    value={form.cajeroKey ?? ""} onChange={handleChange} disabled={cargando}
+                    required={cajeroKeyObligatorio} maxLength={36}
+                    pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+                    title="UUID, p. ej. 3f9a1c2e-4b7d-4a11-9c2a-8e1f2d3c4b5a" />
+            )}
             <p className="text-sm font-semibold text-gray-700">Información Soporte:</p>
             <div className="grid grid-cols-2 gap-4 items-end">
                 <Input label="Encargado" type="text" name="supportName" value={form.supportName} onChange={handleChange}
