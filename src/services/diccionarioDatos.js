@@ -22,6 +22,9 @@ export const getParkingSystemOperationTypes = () => fetchParam("ParkingSystemOpe
 export const getAppUserAuthority = () => fetchParam("AppUserAuthority");
 //GRUPO usuarios de sistemas
 export const getSystemUserAuthority = () => fetchParam("SystemUserAuthority");
+//metodo de pago y tipo de cliente de un uso de parqueadero
+export const getPaymentMethods = () => fetchParam("PaymentMethod");
+export const getCustomerTypes = () => fetchParam("CustomerType");
 
 
 //******En caso de que fallen los metodos******* */

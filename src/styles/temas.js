@@ -45,7 +45,9 @@ export const temas = {
             ver: ` bg-blue-50 text-slate-700 hover:bg-blue-100`,
             editar: ` bg-green-50 text-slate-700 hover:bg-green-100`,
             eliminar: ` bg-red-50 text-slate-700   hover:bg-red-100`,
-            cobrar: ` bg-emerald-50 text-slate-700 hover:bg-emerald-100`
+            cobrar: ` bg-emerald-50 text-slate-700 hover:bg-emerald-100`,
+            qr: ` bg-violet-50 text-slate-700 hover:bg-violet-100
+            disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:bg-violet-50`
         }
     },
 

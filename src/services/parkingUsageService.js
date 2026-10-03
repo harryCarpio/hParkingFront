@@ -29,3 +29,8 @@ export const getCapacidadParqueaderos = () => {
 export const getUsoDetalle = (id) => {
     return api.get(`/v1/parking/usage/${id}/detail`);
 }
+
+//consultar el QR almacenado del ticket de un uso junto con los datos que lo identifican
+export const getUsoTicketQr = (id) => {
+    return api.get(`/v1/parking/usage/${id}/ticket-qr`);
+}

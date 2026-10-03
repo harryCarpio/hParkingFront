@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { DollarSign, Search, X, Eye, Car, CarFront, Bus, Motorbike, Van, Truck, Container, Construction, Tractor } from 'lucide-react'
+import { DollarSign, Search, X, Eye, QrCode } from 'lucide-react'
 import { temas } from '../../styles/temas'
 import { getUsosEstacionamiento, getParkingsFiltroUso } from '../../services/parkingUsageService'
 import { USAGE_STATUS_OPTIONS, labelFromKey } from '../../services/diccionarioDatos'
@@ -11,6 +11,8 @@ import Pagination from '../../components/ui/Pagination'
 import Table from '../../components/ui/Table'
 import PanelDetalleUso from '../../components/usos/PanelDetalleUso'
 import CheckoutPagoModal from '../../components/usos/CheckoutPagoModal'
+import ModalQrUso from '../../components/usos/ModalQrUso'
+import TipoVehiculoAnt from '../../components/usos/TipoVehiculoAnt'
 
 const FILTROS_VACIOS = {
   parkingTicketNumber: '',
@@ -30,30 +32,6 @@ const formatearFecha = (iso) => (
   iso ? new Date(iso).toLocaleString() : '—'
 )
 
-//icono por clase de vehículo ANT; los valores no listados (creados automáticamente en el backend) usan Car
-const ICONOS_TIPO_VEHICULO_ANT = {
-  'AUTOMOVIL': Car,
-  'JEEP': CarFront,
-  'CAMIONETA': Truck,
-  'VEHICULO UTILITARIO': Van,
-  'CAMION': Container,
-  'VOLQUETA': Construction,
-  'OMNIBUS': Bus,
-  'MOTOCICLETA': Motorbike,
-  'VEHICULO ESPECIAL': Tractor,
-}
-
-const TipoVehiculoAnt = ({ tipo }) => {
-  if (!tipo) return '—'
-  const Icono = ICONOS_TIPO_VEHICULO_ANT[tipo] ?? Car
-  return (
-    <span className="inline-flex items-center gap-2 whitespace-nowrap" title={tipo}>
-      <Icono size={16} className="text-celestevr shrink-0" />
-      {tipo}
-    </span>
-  )
-}
-
 const Usos = () => {
   const [datos, setDatos] = useState([])
   const [paginaActual, setPaginaActual] = useState(0)
@@ -67,6 +45,7 @@ const Usos = () => {
   const [parkings, setParkings] = useState([])
   const [usoSeleccionadoId, setUsoSeleccionadoId] = useState(null)
   const [placaCobro, setPlacaCobro] = useState(null)
+  const [usoQrId, setUsoQrId] = useState(null)
 
   const cargar = async (pagina = 0, size = porPagina, filtrosActuales = filtros, ordenamientoActual = ordenamiento) => {
     setCargando(true)
@@ -161,6 +140,14 @@ const Usos = () => {
             onClick={() => setUsoSeleccionadoId(fila.id)}
           >
             <Eye size={16} />
+          </button>
+          <button
+            title={fila.hasTicketQr ? 'Ver QR del ticket' : 'Este uso no tiene QR almacenado'}
+            className={`${temas.tabla.acciones.base} ${temas.tabla.acciones.qr}`}
+            disabled={!fila.hasTicketQr}
+            onClick={() => setUsoQrId(fila.id)}
+          >
+            <QrCode size={16} />
           </button>
           {fila.status === 'ACTIVE' && (
             <button
@@ -288,6 +275,10 @@ const Usos = () => {
           onClose={() => setPlacaCobro(null)}
           onCompletado={handlePagoCompletado}
         />
+      )}
+
+      {usoQrId && (
+        <ModalQrUso parkingUsageId={usoQrId} onClose={() => setUsoQrId(null)} />
       )}
     </div>
   )
