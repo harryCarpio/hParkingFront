@@ -1,4 +1,4 @@
-import { ChartColumnBig, FlaskConical, Home, ParkingSquare, Settings } from 'lucide-react'
+import { ChartColumnBig, Home, ParkingSquare, Settings } from 'lucide-react'
 import React from 'react'
 
 const menuItems = [
@@ -35,14 +35,16 @@ const menuItems = [
             { label: 'Usuarios de aplicaciones', path: '/usuariosapp/listado' },
         ],
     },
-    {
-        id: 'pruebas',
-        label: 'Pruebas API',
-        icon: <FlaskConical size={22} />,
-        children: [
-            { label: 'Consola de pruebas', path: '/pruebas/consola' },
-        ],
-    },
+    //menu "Pruebas API" oculto; la ruta /pruebas/consola sigue registrada en App.jsx. Para mostrarlo de nuevo,
+    //descomentar este bloque y volver a importar FlaskConical de lucide-react
+    // {
+    //     id: 'pruebas',
+    //     label: 'Pruebas API',
+    //     icon: <FlaskConical size={22} />,
+    //     children: [
+    //         { label: 'Consola de pruebas', path: '/pruebas/consola' },
+    //     ],
+    // },
 ]
 
 export default menuItems
