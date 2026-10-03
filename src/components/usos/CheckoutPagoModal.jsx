@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ArrowLeft, CheckCircle2, Pencil, User, X } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Loader2, Pencil, Search, User, X } from 'lucide-react'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
 import Spinner from '../ui/Spinner'
 import { temas } from '../../styles/temas'
 import {
-    cancelarTransaccionAtm, cancelarTransaccionAtmKeepalive, checkoutAtm, cobrarAtm, crearFacturaOperador, getTiposIdentificacionSri
+    cancelarTransaccionAtm, cancelarTransaccionAtmKeepalive, checkoutAtm, cobrarAtm, consultarDatosCliente, crearFacturaOperador,
+    getTiposIdentificacionSri
 } from '../../services/atmService'
 
 const CONSUMIDOR_FINAL = {
@@ -60,6 +61,10 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
     const [tiposIdentificacion, setTiposIdentificacion] = useState([])
     const [editandoFacturacion, setEditandoFacturacion] = useState(false)
     const [facturacion, setFacturacion] = useState(CONSUMIDOR_FINAL)
+    const [buscandoCliente, setBuscandoCliente] = useState(false)
+    const [avisoBusqueda, setAvisoBusqueda] = useState(null)
+    //identificacion de la ultima busqueda: si el usuario la cambia mientras responde, la respuesta se descarta
+    const busquedaClienteRef = useRef(null)
 
     const [montoRecibido, setMontoRecibido] = useState('')
     const [vuelto, setVuelto] = useState(0)
@@ -162,8 +167,55 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
     }
 
     const handleVolverConsumidorFinal = () => {
+        busquedaClienteRef.current = null
         setFacturacion(CONSUMIDOR_FINAL)
         setEditandoFacturacion(false)
+        setAvisoBusqueda(null)
+    }
+
+    const handleIdentificacionChange = (e) => {
+        const valor = e.target.value
+        busquedaClienteRef.current = null
+        setFacturacion((prev) => ({ ...prev, clientIdNumber: valor }))
+        setAvisoBusqueda(null)
+    }
+
+    //igual que el supervisor Android (PaymentViewModel.lookupClientInfo): completa el formulario con los datos de la
+    //ultima factura emitida a esa identificacion; si no hay facturas previas los campos quedan para llenar a mano
+    const handleBuscarCliente = async () => {
+        const idNumber = facturacion.clientIdNumber.trim()
+        if (!idNumber) {
+            setAvisoBusqueda('Ingrese el número de identificación para buscar.')
+            return
+        }
+        if (buscandoCliente) return
+        busquedaClienteRef.current = idNumber
+        setBuscandoCliente(true)
+        setAvisoBusqueda(null)
+        setError(null)
+        try {
+            const { data } = await consultarDatosCliente(idNumber)
+            if (busquedaClienteRef.current !== idNumber) return
+            setFacturacion((prev) => ({
+                ...prev,
+                clientIdType: data.clientIdType ?? prev.clientIdType,
+                clientIdNumber: data.clientIdNumber ?? idNumber,
+                clientName: data.clientName ?? '',
+                billingAddress: data.billingAddress ?? '',
+                billingPhone: data.billingPhone ?? '',
+                billingEmail: data.billingEmail ?? '',
+            }))
+        } catch (err) {
+            if (busquedaClienteRef.current !== idNumber) return
+            if (err.response?.status === 404) {
+                setAvisoBusqueda('No se encontraron facturas previas para esta identificación.')
+            } else {
+                const errores = err.response?.data?.errors
+                setError(errores?.length ? errores.map(e => e.issue).join(', ') : (err.response?.data?.detail || 'Error al consultar datos del cliente.'))
+            }
+        } finally {
+            setBuscandoCliente(false)
+        }
     }
 
     const handleRegistrarFactura = async () => {
@@ -315,8 +367,23 @@ const CheckoutPagoModal = ({ plate, onClose, onCompletado }) => {
                                             ))}
                                         </select>
                                     </div>
-                                    <Input label="Identificación" value={facturacion.clientIdNumber}
-                                        onChange={(e) => setFacturacion((prev) => ({ ...prev, clientIdNumber: e.target.value }))} />
+                                    <div className="flex flex-col gap-1">
+                                        <Input label="Identificación" value={facturacion.clientIdNumber}
+                                            onChange={handleIdentificacionChange}
+                                            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleBuscarCliente() } }}
+                                            disabled={procesando}
+                                            accionDerecha={
+                                                <button type="button" onClick={handleBuscarCliente}
+                                                    disabled={buscandoCliente || procesando || !facturacion.clientIdNumber.trim()}
+                                                    className="text-gray-400 hover:text-slate-700 transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
+                                                    title="Buscar datos del cliente" aria-label="Buscar datos del cliente">
+                                                    {buscandoCliente ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
+                                                </button>
+                                            } />
+                                        {avisoBusqueda && (
+                                            <p className="text-xs text-amber-700" role="status">{avisoBusqueda}</p>
+                                        )}
+                                    </div>
                                     <Input label="Nombre" value={facturacion.clientName}
                                         onChange={(e) => setFacturacion((prev) => ({ ...prev, clientName: e.target.value }))} />
                                     <Input label="Dirección" value={facturacion.billingAddress}

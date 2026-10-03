@@ -2,7 +2,8 @@ import { X, AlertTriangle } from 'lucide-react'
 import React from 'react'
 import Button from './Button'
 
-const ModalConfirmacion = ({ title = "Eliminar", subtitle, mensaje, subMensaje,onConfirmar, onCancelar, cargando, children }) => {
+const ModalConfirmacion = ({ title = "Eliminar", subtitle, mensaje, subMensaje,onConfirmar, onCancelar, cargando, children,
+    textoConfirmar = "Eliminar", varianteConfirmar = "danger" }) => {
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 "
             onClick={onCancelar}>
@@ -39,7 +40,7 @@ const ModalConfirmacion = ({ title = "Eliminar", subtitle, mensaje, subMensaje,o
 
                 {/* Footer */}
                 <div className="flex gap-3 justify-end px-6 py-4 border-t border-gray-200 flex-shrink-0">
-                <Button texto={"Eliminar"} variante="danger" tamanio="md" onClick={onConfirmar} disabled={cargando} cargando={cargando} />
+                <Button texto={textoConfirmar} variante={varianteConfirmar} tamanio="md" onClick={onConfirmar} disabled={cargando} cargando={cargando} />
                     <Button texto="Cancelar" variante="secondary" tamanio="md" onClick={onCancelar} disabled={cargando} />
                     
                 </div>

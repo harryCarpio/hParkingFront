@@ -16,6 +16,7 @@ import Usos from "./pages/estacionamiento/Usos"
 import Facturas from "./pages/estacionamiento/Facturas"
 import Indicadores from "./pages/indicadores/Indicadores"
 import MiPerfil from "./pages/perfil/MiPerfil"
+import RolesPermisos from "./pages/rolesPermisos/RolesPermisos"
 
 function App() {
 
@@ -43,6 +44,7 @@ function App() {
               <Route path="/usuariosapp/listado" element={<ListadoUsuariosAplicacion />} />
               <Route path="/pruebas/consola" element={<ListadoPruebasApi />} />
               <Route path="/perfil" element={<MiPerfil />} />
+              <Route path="/roles-permisos" element={<RolesPermisos />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

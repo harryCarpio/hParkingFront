@@ -33,6 +33,7 @@ const menuItems = [
             { label: 'Estacionamientos', path: '/estacionamientos/listado' },
             { label: 'Usuarios de sistema', path: '/usuarios-sistema/listado' },
             { label: 'Usuarios de aplicaciones', path: '/usuariosapp/listado' },
+            { label: 'Roles y permisos', path: '/roles-permisos' },
         ],
     },
     //menu "Pruebas API" oculto; la ruta /pruebas/consola sigue registrada en App.jsx. Para mostrarlo de nuevo,

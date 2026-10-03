@@ -37,6 +37,11 @@ export const cobrarAtm = ({ idTransaction, receivedAmount, returnedAmount, lines
 }
 
 //tipos de identificacion SRI (tabla 6) para el select de facturacion: cedula, RUC, pasaporte, consumidor final, etc.
+//datos de facturacion de la ultima factura del cliente (autocompletado); 404 si no tiene facturas previas
+export const consultarDatosCliente = (idNumber) => {
+    return api.get('/v1/invoice/client', { params: { idNumber } });
+}
+
 export const getTiposIdentificacionSri = () => {
     return api.get('/v1/sri-codes', { params: { table: 6 } });
 }
