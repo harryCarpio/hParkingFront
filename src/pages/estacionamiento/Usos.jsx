@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { DollarSign, Search, X, Eye } from 'lucide-react'
+import { DollarSign, Search, X, Eye, Car, CarFront, Bus, Motorbike, Van, Truck, Container, Construction, Tractor } from 'lucide-react'
 import { temas } from '../../styles/temas'
 import { getUsosEstacionamiento, getParkingsFiltroUso } from '../../services/parkingUsageService'
 import { USAGE_STATUS_OPTIONS, labelFromKey } from '../../services/diccionarioDatos'
@@ -29,6 +29,30 @@ const aInstanteUtc = (valorLocal) => (
 const formatearFecha = (iso) => (
   iso ? new Date(iso).toLocaleString() : '—'
 )
+
+//icono por clase de vehículo ANT; los valores no listados (creados automáticamente en el backend) usan Car
+const ICONOS_TIPO_VEHICULO_ANT = {
+  'AUTOMOVIL': Car,
+  'JEEP': CarFront,
+  'CAMIONETA': Truck,
+  'VEHICULO UTILITARIO': Van,
+  'CAMION': Container,
+  'VOLQUETA': Construction,
+  'OMNIBUS': Bus,
+  'MOTOCICLETA': Motorbike,
+  'VEHICULO ESPECIAL': Tractor,
+}
+
+const TipoVehiculoAnt = ({ tipo }) => {
+  if (!tipo) return '—'
+  const Icono = ICONOS_TIPO_VEHICULO_ANT[tipo] ?? Car
+  return (
+    <span className="inline-flex items-center gap-2 whitespace-nowrap" title={tipo}>
+      <Icono size={16} className="text-celestevr shrink-0" />
+      {tipo}
+    </span>
+  )
+}
 
 const Usos = () => {
   const [datos, setDatos] = useState([])
@@ -122,6 +146,7 @@ const Usos = () => {
     { key: 'parkingName', label: 'Estacionamiento' },
     { key: 'parkingTicketNumber', label: 'N° Ticket', ordenable: true },
     { key: 'plate', label: 'Placa', ordenable: true },
+    { key: 'antVehicleType', label: 'Tipo vehículo', render: (fila) => <TipoVehiculoAnt tipo={fila.antVehicleType} /> },
     { key: 'entryTime', label: 'Entrada', render: (fila) => formatearFecha(fila.entryTime), ordenable: true },
     { key: 'exitTime', label: 'Salida', render: (fila) => formatearFecha(fila.exitTime), ordenable: true },
     { key: 'status', label: 'Estado', render: (fila) => labelFromKey(USAGE_STATUS_OPTIONS, fila.status), ordenable: true },
