@@ -42,6 +42,7 @@ const breadcrumbRoutes = [
         crumbs: [{ label: 'Configuraciones' }, { label: 'Usuarios de aplicaciones' }],
     },
     { path: '/pruebas/consola', crumbs: [{ label: 'Pruebas API' }, { label: 'Consola de pruebas' }] },
+    { path: '/perfil', crumbs: [{ label: 'Mi perfil' }] },
 ]
 
 //busca la definicion de migas que corresponde a la ruta actual, soportando parametros dinamicos (:id)

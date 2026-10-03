@@ -91,8 +91,14 @@ export const AuthProvider = ({ children }) => {
 
     };
 
+    //reemplaza los tokens de la sesion actual (ej. tras cambiar la contraseña el backend invalida los anteriores)
+    const reemplazarTokens = ({ accessToken, refreshToken }) => {
+        setAccessToken(accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
+    };
+
     return (
-        <AuthContext.Provider value={{ usuario, login, logout, cargando }}>
+        <AuthContext.Provider value={{ usuario, login, logout, cargando, reemplazarTokens }}>
             {children}
         </AuthContext.Provider>
     );

@@ -15,6 +15,7 @@ import ListadoPruebasApi from "./pages/pruebasApi/ListadoPruebasApi"
 import Usos from "./pages/estacionamiento/Usos"
 import Facturas from "./pages/estacionamiento/Facturas"
 import Indicadores from "./pages/indicadores/Indicadores"
+import MiPerfil from "./pages/perfil/MiPerfil"
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
               <Route path="/usuarios-sistema/listado" element={<ListadoUsuariosSistema />} />
               <Route path="/usuariosapp/listado" element={<ListadoUsuariosAplicacion />} />
               <Route path="/pruebas/consola" element={<ListadoPruebasApi />} />
+              <Route path="/perfil" element={<MiPerfil />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
